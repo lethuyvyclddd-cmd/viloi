@@ -26,9 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
-    private static final String FIREBASE_URL =
-            "https://vilo-24bb7-default-rtdb.firebaseio.com/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // ===== FIREBASE =====
         mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance(FIREBASE_URL)
+        databaseReference = FirebaseDatabase.getInstance()
                 .getReference("nguoi_dung");
-
         // ===== CLICK REGISTER =====
         btnRegister.setOnClickListener(v -> registerUser());
 
@@ -107,59 +103,45 @@ public class RegisterActivity extends AppCompatActivity {
 
         // ===== FIREBASE AUTH =====
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-
-                    FirebaseUser user = authResult.getUser();
-                    if (user == null) {
-                        showError("Không lấy được user");
-                        return;
-                    }
-
-                    String userId = user.getUid();
-
-                    // ===== DATA USER =====
-                    HashMap<String, Object> userMap = new HashMap<>();
-
-                    String currentTime = String.valueOf(System.currentTimeMillis()); // ✅ FIX API
-
-                    userMap.put("email", email);
-                    userMap.put("ten_hien_thi", username);
-                    userMap.put("vai_tro", "user");
-
-                    userMap.put("hoat_dong", true);
-                    userMap.put("tong_tim_kiem", 0);
-
-                    userMap.put("tao_luc", currentTime);
-                    userMap.put("lan_hoat_dong_cuoi", currentTime);
-
-                    userMap.put("yeu_thich", new HashMap<>());
-                    userMap.put("lich_su_tim_kiem", new HashMap<>());
-
-                    // ===== LƯU DATABASE =====
-                    databaseReference.child(userId).setValue(userMap)
-                            .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                showError("Lỗi lưu DB: " + e.getMessage());
-                            });
-
-                })
-                .addOnFailureListener(e -> {
+                .addOnCompleteListener(task -> {
 
                     btnRegister.setEnabled(true);
                     btnRegister.setText("ĐĂNG KÝ NGAY");
 
-                    if (e instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(this, "Email đã tồn tại! Chuyển sang đăng nhập...", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) {
 
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        finish();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user == null) {
+                            Toast.makeText(this, "User null", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        String userId = user.getUid();
+
+                        HashMap<String, Object> userMap = new HashMap<>();
+                        String currentTime = String.valueOf(System.currentTimeMillis());
+
+                        userMap.put("email", email);
+                        userMap.put("ten_hien_thi", username);
+                        userMap.put("vai_tro", "user");
+                        userMap.put("tao_luc", currentTime);
+
+                        databaseReference.child(userId).setValue(userMap)
+                                .addOnCompleteListener(task2 -> {
+
+                                    if (task2.isSuccessful()) {
+                                        Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+
+                                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                        finish();
+
+                                    } else {
+                                        Toast.makeText(this, "Lỗi DB: " + task2.getException(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
                     } else {
-                        Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Lỗi: " + task.getException(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
