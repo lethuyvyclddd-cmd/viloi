@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1041025460027",
+    "project_id": "viloi-7c05e",
+    "storage_bucket": "viloi-7c05e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041025460027:android:abc05a201d41b1b7e8391e",
+        "android_client_info": {
+          "package_name": "com.example.viloi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8f3eyQ30krb8GNNrgXZuRII-rfZWdoxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

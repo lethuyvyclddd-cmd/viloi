@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Trang chủ -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.viloi.ui.home.HomeFragment"
+        android:label="Trang chủ">
+
+
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"/>
+
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"/>
+
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment"/>
+
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+
+    </fragment>
+
+
+
+
+    <!-- Danh mục -->
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.viloi.ui.DanhMuc.DanhMucFragment"
+        android:label="Danh mục" >
+
+        <action
+            android:id="@+id/action_categoryFragment_to_homeFragment"
+            app:destination="@id/homeFragment"/>
+
+        <action
+            android:id="@+id/action_categoryFragment_to_searchFragment"
+            app:destination="@id/searchFragment"/>
+
+        <action
+            android:id="@+id/action_categoryFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"/>
+
+        <action
+            android:id="@+id/action_categoryFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+    </fragment>
+
+    <!-- Tìm kiếm -->
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.viloi.ui.timkiem.TimFragment"
+        android:label="Tìm kiếm" >
+
+        <action
+            android:id="@+id/action_searchFragment_to_homeFragment"
+            app:destination="@id/homeFragment"/>
+
+        <action
+            android:id="@+id/action_searchFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"/>
+
+        <action
+            android:id="@+id/action_searchFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"/>
+
+        <action
+            android:id="@+id/action_searchFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+
+    </fragment>
+
+    <!-- Yêu thích -->
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.viloi.ui.yeuthich.YeuThichFragment"
+        android:label="Yêu thích" >
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_homeFragment"
+            app:destination="@id/homeFragment"/>
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"/>
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_searchFragment"
+            app:destination="@id/searchFragment"/>
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+
+    </fragment>
+
+    <!-- Hồ sơ -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.viloi.ui.NguoiDung.NguoiDungFragment"
+        android:label="Hồ sơ" >
+
+        <action
+            android:id="@+id/action_profileFragment_to_homeFragment"
+            app:destination="@id/homeFragment"/>
+
+        <action
+            android:id="@+id/action_profileFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"/>
+
+        <action
+            android:id="@+id/action_profileFragment_to_searchFragment"
+            app:destination="@id/searchFragment"/>
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment"/>
+
+    </fragment>
+
+</navigation>
