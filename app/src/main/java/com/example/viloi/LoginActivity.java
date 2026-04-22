@@ -6,13 +6,8 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.viloi.MainActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -24,8 +19,6 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
-    private static final String FIREBASE_URL =
-            "https://viloi-7c05e-default-rtdb.firebaseio.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +27,12 @@ public class LoginActivity extends AppCompatActivity {
 
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
-
         btnLogin = findViewById(R.id.btnLogin);
-        mAuth = FirebaseAuth.getInstance();
 
-        databaseReference = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("Users");
+        // ✅ Firebase chuẩn (KHÔNG dùng URL)
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance()
+                .getReference("nguoi_dung");
 
         btnLogin.setOnClickListener(v -> loginUser());
 
@@ -55,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
-        // Validate
         if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Vui lòng nhập email");
             edtEmail.requestFocus();
@@ -71,26 +64,20 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setEnabled(false);
         btnLogin.setText("Đang đăng nhập...");
 
-        // 🔥 Firebase Auth login
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-
-                    // Chuyển sang MainActivity
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Sai email hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(task -> {
 
                     btnLogin.setEnabled(true);
                     btnLogin.setText("ĐĂNG NHẬP");
-                });
-    }
 
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        btnLogin.setEnabled(true);
-        btnLogin.setText("ĐĂNG NHẬP");
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Lỗi: " + task.getException(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
