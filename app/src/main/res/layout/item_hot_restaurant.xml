@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_hot_restaurant.xml -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <!-- Thumbnail -->
+        <FrameLayout
+            android:layout_width="72dp"
+            android:layout_height="72dp">
+
+            <ImageView
+                android:id="@+id/iv_hot_restaurant_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_image_placeholder" />
+        </FrameLayout>
+
+        <!-- Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:marginStart="12dp"
+            android:paddingStart="12dp">
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/tv_hot_restaurant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quán Cua Đồng Út Hải"
+                android:textColor="#1A1A1A"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Category tags -->
+            <TextView
+                android:id="@+id/tv_hot_restaurant_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Hải sản · Đường phố"
+                android:textColor="#FF6B35"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Address -->
+            <TextView
+                android:id="@+id/tv_hot_restaurant_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="12 Phan Ngọc Hiển, P.1, TP.Cà Mau"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Hot badge + Rating + Views -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical">
+
+                <!-- Hot badge -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_hot_badge"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="Hot"
+                    android:textColor="#FF4444"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <!-- Rating -->
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_star_filled"
+                    app:tint="#FFA500" />
+
+                <TextView
+                    android:id="@+id/tv_hot_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="4.8"
+                    android:textColor="#FFA500"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <!-- View count -->
+                <TextView
+                    android:id="@+id/tv_hot_view_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="· 120 lượt xem"
+                    android:textColor="#AAAAAA"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
