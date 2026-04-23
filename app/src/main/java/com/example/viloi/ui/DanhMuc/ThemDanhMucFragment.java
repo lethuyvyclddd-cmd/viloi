@@ -1,6 +1,5 @@
 package com.example.viloi.ui.DanhMuc;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,15 +7,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.viloi.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DanhMucFragment#newInstance} factory method to
+ * Use the {@link ThemDanhMucFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DanhMucFragment extends Fragment {
+public class ThemDanhMucFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +29,7 @@ public class DanhMucFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public DanhMucFragment() {
+    public ThemDanhMucFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +39,11 @@ public class DanhMucFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DanhMucFragment.
+     * @return A new instance of fragment ThemDanhMucFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DanhMucFragment newInstance(String param1, String param2) {
-        DanhMucFragment fragment = new DanhMucFragment();
+    public static ThemDanhMucFragment newInstance(String param1, String param2) {
+        ThemDanhMucFragment fragment = new ThemDanhMucFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,12 +63,22 @@ public class DanhMucFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_them_danh_muc, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_danh_muc, container, false);
+        EditText ten = view.findViewById(R.id.edtTenDanhMuc);
+        EditText mota = view.findViewById(R.id.edtMoTa);
+        EditText icon = view.findViewById(R.id.edtIcon);
+        EditText mau = view.findViewById(R.id.edtMau);
+        Button btn = view.findViewById(R.id.btnThemDanhMuc);
 
-        view.findViewById(R.id.txtThemMoi).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ThemDanhMucFragment.class);
-            startActivity(intent);
+        btn.setOnClickListener(v -> {
+            String t = ten.getText().toString();
+            String m = mota.getText().toString();
+            String i = icon.getText().toString();
+            String c = mau.getText().toString();
+
+            // test trước
+            Toast.makeText(getContext(), "Đã nhập: " + t, Toast.LENGTH_SHORT).show();
         });
 
         return view;
