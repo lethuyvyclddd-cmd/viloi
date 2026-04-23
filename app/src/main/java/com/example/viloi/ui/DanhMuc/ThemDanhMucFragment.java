@@ -1,39 +1,25 @@
 package com.example.viloi.ui.DanhMuc;
 
-import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.util.Log;
-=======
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
->>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.viloi.R;
-import com.example.viloi.ui.adapter.DanhMucAdapter;
-import com.example.viloi.ui.model.DanhMuc;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ThemDanhMucFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ThemDanhMucFragment extends Fragment {
 
-public class DanhMucFragment extends Fragment {
-
-<<<<<<< HEAD
-=======
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,7 +29,7 @@ public class DanhMucFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public DanhMucFragment() {
+    public ThemDanhMucFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +39,11 @@ public class DanhMucFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DanhMucFragment.
+     * @return A new instance of fragment ThemDanhMucFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DanhMucFragment newInstance(String param1, String param2) {
-        DanhMucFragment fragment = new DanhMucFragment();
+    public static ThemDanhMucFragment newInstance(String param1, String param2) {
+        ThemDanhMucFragment fragment = new ThemDanhMucFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -77,12 +63,26 @@ public class DanhMucFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_them_danh_muc, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_danh_muc, container, false);
+        EditText ten = view.findViewById(R.id.edtTenDanhMuc);
+        EditText mota = view.findViewById(R.id.edtMoTa);
+        EditText icon = view.findViewById(R.id.edtIcon);
+        EditText mau = view.findViewById(R.id.edtMau);
+        Button btn = view.findViewById(R.id.btnThemDanhMuc);
 
-        view.findViewById(R.id.txtThemMoi).setOnClickListener(v -> {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_danhMucFragment_to_themDanhMucFragment);
+        btn.setOnClickListener(v -> {
+            String t = ten.getText().toString();
+            String m = mota.getText().toString();
+            String i = icon.getText().toString();
+            String c = mau.getText().toString();
+
+            // test trước
+            Toast.makeText(getContext(), "Đã nhập: " + t, Toast.LENGTH_SHORT).show();
+        });
+
+        view.findViewById(R.id.btnBack_themdm).setOnClickListener(v -> {
+            requireActivity().onBackPressed();
         });
 
         return view;

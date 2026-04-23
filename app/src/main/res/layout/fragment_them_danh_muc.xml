@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/btnBack_themdm"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_muiten"/>
+        <!-- Tiêu đề -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Thêm danh mục"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Tên danh mục -->
+        <EditText
+            android:id="@+id/edtTenDanhMuc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nhập tên danh mục"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Mô tả -->
+        <EditText
+            android:id="@+id/edtMoTa"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Mô tả"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Icon -->
+        <EditText
+            android:id="@+id/edtIcon"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Tên icon (vd: ic_coffee)"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Màu -->
+        <EditText
+            android:id="@+id/edtMau"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Màu (#FF5722)"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Button thêm -->
+        <Button
+            android:id="@+id/btnThemDanhMuc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Thêm danh mục"
+            android:textAllCaps="false"
+            android:backgroundTint="#FF6B35"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+</ScrollView>

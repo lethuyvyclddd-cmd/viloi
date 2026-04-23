@@ -53,6 +53,10 @@
         <action
             android:id="@+id/action_categoryFragment_to_profileFragment"
             app:destination="@id/profileFragment"/>
+
+        <action
+            android:id="@+id/action_danhMucFragment_to_themDanhMucFragment"
+            app:destination="@id/themDanhMucFragment" />
     </fragment>
 
     <!-- Tìm kiếm -->
@@ -126,5 +130,14 @@
             app:destination="@id/favoriteFragment"/>
 
     </fragment>
+
+    <fragment
+        android:id="@+id/themDanhMucFragment"
+        android:name="com.example.viloi.ui.DanhMuc.ThemDanhMucFragment"
+        android:label="Thêm danh mục"/>
+
+
+
+
 
 </navigation>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+<<<<<<< HEAD
     android:layout_height="100dp"
+=======
+    android:layout_height="wrap_content"
+>>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
     android:orientation="vertical"
     android:gravity="center"
     android:layout_margin="8dp"
@@ -11,12 +15,19 @@
 
     <!-- nền icon -->
     <FrameLayout
+<<<<<<< HEAD
         android:id="@+id/bg_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="#EEEEEE"
         android:layout_gravity="center"
         android:layout_marginBottom="6dp">
+=======
+        android:id="@+id/bgIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_category_icon">
+>>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
 
         <!-- icon -->
         <ImageView
