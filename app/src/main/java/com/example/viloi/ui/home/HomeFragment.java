@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.viloi.R;
-import com.example.viloi.adapter.CategoryAdapter;
-import com.example.viloi.adapter.HotRestaurantAdapter;
-import com.example.viloi.adapter.SuggestedAdapter;
-import com.example.viloi.model.Category;
-import com.example.viloi.model.Restaurant;
 
+import com.example.viloi.ui.adapter.DanhMucAdapter;
+import com.example.viloi.ui.adapter.GoiYAdapter;
+import com.example.viloi.ui.adapter.HotAdapter;
+import com.example.viloi.ui.model.DanhMuc;
+import com.example.viloi.ui.model.NguoiDung;
+import com.example.viloi.ui.model.NhaHang;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,27 +29,27 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    // UI Components
     private TextView tvLocation;
     private TextView tvUserInitial;
-    private EditText etSearch;
-    private RecyclerView rvCategories;
-    private RecyclerView rvSuggested;
-    private RecyclerView rvHotRestaurants;
+    private RecyclerView rvDanhMuc;
+    private RecyclerView rvGoiY;
+    private RecyclerView rvHot;
 
-    // Adapters
-    private CategoryAdapter categoryAdapter;
-    private SuggestedAdapter suggestedAdapter;
-    private HotRestaurantAdapter hotRestaurantAdapter;
+    private DanhMucAdapter danhMucAdapter;
+    private GoiYAdapter goiYAdapter;
+    private HotAdapter hotAdapter;
 
-    // Data Lists
-    private List<Category> categoryList = new ArrayList<>();
-    private List<Restaurant> suggestedList = new ArrayList<>();
-    private List<Restaurant> hotList = new ArrayList<>();
+    private final List<DanhMuc> danhMucList = new ArrayList<>();
+    private final List<NhaHang> goiYList    = new ArrayList<>();
+    private final List<NhaHang> hotList     = new ArrayList<>();
 
-    // Firebase
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+
+    // Cấu hình từ cau_hinh_app/goi_y
+    private int soGoiYToiDa   = 5;
+    private int nguongTimKiem = 3;
+    private int nguongNoiBat  = 50;
 
     @Nullable
     @Override
@@ -62,188 +63,214 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Init Firebase
-        db = FirebaseFirestore.getInstance();
+        db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Bind views
-        tvLocation = view.findViewById(R.id.tv_location);
-        tvUserInitial = view.findViewById(R.id.tv_user_initial);
-        etSearch = view.findViewById(R.id.et_search);
-        rvCategories = view.findViewById(R.id.rv_categories);
-        rvSuggested = view.findViewById(R.id.rv_suggested);
-        rvHotRestaurants = view.findViewById(R.id.rv_hot_restaurants);
-
-        setupUser();
+        bindViews(view);
         setupRecyclerViews();
-        setupSearch();
-        loadDataFromFirebase();
+        setupUserInfo();
+        loadCauHinhApp();
     }
 
-    private void setupUser() {
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            String displayName = user.getDisplayName();
-            if (displayName != null && !displayName.isEmpty()) {
-                tvUserInitial.setText(String.valueOf(displayName.charAt(0)).toUpperCase());
-            } else {
-                String email = user.getEmail();
-                if (email != null && !email.isEmpty()) {
-                    tvUserInitial.setText(String.valueOf(email.charAt(0)).toUpperCase());
-                }
-            }
-        }
+    private void bindViews(View view) {
+        tvLocation    = view.findViewById(R.id.tv_location);
+        tvUserInitial = view.findViewById(R.id.tv_user_initial);
+        rvDanhMuc     = view.findViewById(R.id.rv_categories);
+        rvGoiY        = view.findViewById(R.id.rv_suggested);
+        rvHot         = view.findViewById(R.id.rv_hot_restaurants);
 
-        // Get user location from Firestore
-        if (user != null) {
-            db.collection("users").document(user.getUid())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String location = documentSnapshot.getString("location");
-                            if (location != null) {
-                                tvLocation.setText(location);
-                            }
-                        }
-                    });
-        }
+        view.findViewById(R.id.tv_view_all_categories)
+                .setOnClickListener(v -> navigateToDanhMuc());
+        view.findViewById(R.id.tv_view_all_suggested)
+                .setOnClickListener(v -> navigateToGoiY());
+        view.findViewById(R.id.tv_view_all_hot)
+                .setOnClickListener(v -> navigateToHot());
     }
 
     private void setupRecyclerViews() {
-        // Categories - Horizontal
-        rvCategories.setLayoutManager(
+        rvDanhMuc.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        categoryAdapter = new CategoryAdapter(categoryList, category -> {
-            // Navigate to category detail
-            Toast.makeText(getContext(), "Danh mục: " + category.getName(), Toast.LENGTH_SHORT).show();
-        });
-        rvCategories.setAdapter(categoryAdapter);
+        danhMucAdapter = new DanhMucAdapter(danhMucList, this::navigateToDanhMucDetail);
+        rvDanhMuc.setAdapter(danhMucAdapter);
 
-        // Suggested - Horizontal
-        rvSuggested.setLayoutManager(
+        rvGoiY.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        suggestedAdapter = new SuggestedAdapter(suggestedList, restaurant -> {
-            navigateToRestaurantDetail(restaurant);
-        });
-        rvSuggested.setAdapter(suggestedAdapter);
+        goiYAdapter = new GoiYAdapter(goiYList, this::navigateToNhaHangDetail);
+        rvGoiY.setAdapter(goiYAdapter);
 
-        // Hot Restaurants - Vertical
-        rvHotRestaurants.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvHotRestaurants.setNestedScrollingEnabled(false);
-        hotRestaurantAdapter = new HotRestaurantAdapter(hotList, restaurant -> {
-            navigateToRestaurantDetail(restaurant);
-        });
-        rvHotRestaurants.setAdapter(hotRestaurantAdapter);
+        rvHot.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvHot.setNestedScrollingEnabled(false);
+        hotAdapter = new HotAdapter(hotList, this::navigateToNhaHangDetail);
+        rvHot.setAdapter(hotAdapter);
     }
 
-    private void setupSearch() {
-        etSearch.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                // Navigate to Search Fragment
-                // Navigation.findNavController(v).navigate(R.id.action_home_to_search);
-            }
-        });
-    }
+    // ── USER INFO ──────────────────────────────────
+    private void setupUserInfo() {
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        if (firebaseUser == null) return;
 
-    private void loadDataFromFirebase() {
-        loadCategories();
-        loadSuggestedRestaurants();
-        loadHotRestaurants();
-    }
-
-    private void loadCategories() {
-        db.collection("categories")
-                .orderBy("order")
-                .limit(5)
+        // Document ID trong "nguoi_dung" = Firebase Auth UID
+        db.collection("nguoi_dung")
+                .document(firebaseUser.getUid())
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    categoryList.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Category category = doc.toObject(Category.class);
-                        category.setId(doc.getId());
-                        categoryList.add(category);
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded()) return;
+                    if (doc.exists()) {
+                        NguoiDung user = doc.toObject(NguoiDung.class);
+                        if (user != null) {
+                            user.setId(doc.getId());
+                            tvUserInitial.setText(user.getInitial());
+                        }
                     }
-                    categoryAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Lỗi tải danh mục", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void loadSuggestedRestaurants() {
-        FirebaseUser user = auth.getCurrentUser();
-        if (user == null) return;
+    // ── CẤU HÌNH APP ──────────────────────────────
+    private void loadCauHinhApp() {
+        db.collection("cau_hinh_app")
+                .document("goi_y")
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded()) return;
+                    if (doc.exists()) {
+                        Long sg  = doc.getLong("so_goi_y_toi_da");
+                        Long ntk = doc.getLong("nguong_tim_kiem");
+                        Long nnb = doc.getLong("nguong_noi_bat");
+                        if (sg  != null) soGoiYToiDa   = sg.intValue();
+                        if (ntk != null) nguongTimKiem = ntk.intValue();
+                        if (nnb != null) nguongNoiBat  = nnb.intValue();
+                    }
+                    loadAllData();
+                })
+                .addOnFailureListener(e -> loadAllData()); // dùng default nếu lỗi
+    }
 
-        // Load search history or top-rated for user
-        db.collection("restaurants")
-                .orderBy("searchCount", Query.Direction.DESCENDING)
+    private void loadAllData() {
+        loadDanhMuc();
+        loadGoiY();
+        loadHot();
+    }
+
+    // ── DANH MỤC ──────────────────────────────────
+    // collection: danh_muc | filter: hoat_dong=true, mac_dinh=true | sort: uu_tien ASC
+    private void loadDanhMuc() {
+        db.collection("danh_muc")
+                .whereEqualTo("hoat_dong", true)
+                .whereEqualTo("mac_dinh", true)
+                .orderBy("uu_tien", Query.Direction.ASCENDING)
                 .limit(5)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    suggestedList.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Restaurant restaurant = doc.toObject(Restaurant.class);
-                        restaurant.setId(doc.getId());
-                        suggestedList.add(restaurant);
+                .addOnSuccessListener(snapshots -> {
+                    if (!isAdded()) return;
+                    danhMucList.clear();
+                    for (QueryDocumentSnapshot doc : snapshots) {
+                        DanhMuc dm = doc.toObject(DanhMuc.class);
+                        dm.setId(doc.getId());
+                        danhMucList.add(dm);
                     }
-                    suggestedAdapter.notifyDataSetChanged();
+                    danhMucAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> showError("Lỗi tải danh mục"));
+    }
+
+    // ── GỢI Ý ─────────────────────────────────────
+    // collection: nha_hang | filter: hoat_dong=true, luot_tim_kiem >= nguong_tim_kiem
+    // sort: luot_tim_kiem DESC | limit: so_goi_y_toi_da (từ cau_hinh_app)
+    private void loadGoiY() {
+        db.collection("nha_hang")
+                .whereEqualTo("hoat_dong", true)
+                .whereGreaterThanOrEqualTo("luot_tim_kiem", nguongTimKiem)
+                .orderBy("luot_tim_kiem", Query.Direction.DESCENDING)
+                .limit(soGoiYToiDa)
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    if (!isAdded()) return;
+                    goiYList.clear();
+                    for (QueryDocumentSnapshot doc : snapshots) {
+                        NhaHang nh = doc.toObject(NhaHang.class);
+                        nh.setId(doc.getId());
+                        goiYList.add(nh);
+                    }
+                    goiYAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // Load fallback without ordering
-                    db.collection("restaurants")
-                            .limit(5)
+                    // Fallback không dùng whereGreaterThan (tránh lỗi index chưa tạo)
+                    db.collection("nha_hang")
+                            .whereEqualTo("hoat_dong", true)
+                            .orderBy("luot_tim_kiem", Query.Direction.DESCENDING)
+                            .limit(soGoiYToiDa)
                             .get()
                             .addOnSuccessListener(snapshots -> {
-                                suggestedList.clear();
+                                if (!isAdded()) return;
+                                goiYList.clear();
                                 for (QueryDocumentSnapshot doc : snapshots) {
-                                    Restaurant restaurant = doc.toObject(Restaurant.class);
-                                    restaurant.setId(doc.getId());
-                                    suggestedList.add(restaurant);
+                                    NhaHang nh = doc.toObject(NhaHang.class);
+                                    nh.setId(doc.getId());
+                                    goiYList.add(nh);
                                 }
-                                suggestedAdapter.notifyDataSetChanged();
+                                goiYAdapter.notifyDataSetChanged();
                             });
                 });
     }
 
-    private void loadHotRestaurants() {
-        db.collection("restaurants")
-                .whereEqualTo("isHot", true)
-                .orderBy("viewCount", Query.Direction.DESCENDING)
+    // ── HOT ───────────────────────────────────────
+    // collection: nha_hang | filter: hoat_dong=true, noi_bat=true
+    // sort: luot_xem DESC
+    private void loadHot() {
+        db.collection("nha_hang")
+                .whereEqualTo("hoat_dong", true)
+                .whereEqualTo("noi_bat", true)
+                .orderBy("luot_xem", Query.Direction.DESCENDING)
                 .limit(10)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(snapshots -> {
+                    if (!isAdded()) return;
                     hotList.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Restaurant restaurant = doc.toObject(Restaurant.class);
-                        restaurant.setId(doc.getId());
-                        hotList.add(restaurant);
+                    for (QueryDocumentSnapshot doc : snapshots) {
+                        NhaHang nh = doc.toObject(NhaHang.class);
+                        nh.setId(doc.getId());
+                        hotList.add(nh);
                     }
-                    hotRestaurantAdapter.notifyDataSetChanged();
+                    hotAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // Fallback: load top rated
-                    db.collection("restaurants")
-                            .orderBy("rating", Query.Direction.DESCENDING)
+                    // Fallback: top luot_xem không cần noi_bat
+                    db.collection("nha_hang")
+                            .whereEqualTo("hoat_dong", true)
+                            .orderBy("luot_xem", Query.Direction.DESCENDING)
                             .limit(10)
                             .get()
                             .addOnSuccessListener(snapshots -> {
+                                if (!isAdded()) return;
                                 hotList.clear();
                                 for (QueryDocumentSnapshot doc : snapshots) {
-                                    Restaurant restaurant = doc.toObject(Restaurant.class);
-                                    restaurant.setId(doc.getId());
-                                    hotList.add(restaurant);
+                                    NhaHang nh = doc.toObject(NhaHang.class);
+                                    nh.setId(doc.getId());
+                                    hotList.add(nh);
                                 }
-                                hotRestaurantAdapter.notifyDataSetChanged();
+                                hotAdapter.notifyDataSetChanged();
                             });
                 });
     }
 
-    private void navigateToRestaurantDetail(Restaurant restaurant) {
-        // Example: use NavController
-        // Bundle bundle = new Bundle();
-        // bundle.putString("restaurantId", restaurant.getId());
-        // Navigation.findNavController(requireView())
-        //           .navigate(R.id.action_home_to_restaurantDetail, bundle);
-        Toast.makeText(getContext(), "Mở: " + restaurant.getName(), Toast.LENGTH_SHORT).show();
+    // ── NAVIGATION ────────────────────────────────
+    private void navigateToNhaHangDetail(NhaHang nhaHang) {
+        // Bundle b = new Bundle();
+        // b.putString("nhaHangId", nhaHang.getId());
+        // Navigation.findNavController(requireView()).navigate(R.id.action_home_to_detail, b);
+        Toast.makeText(getContext(), nhaHang.getTen(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void navigateToDanhMucDetail(DanhMuc danhMuc) {
+        Toast.makeText(getContext(), danhMuc.getTen(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void navigateToDanhMuc() { /* TODO */ }
+    private void navigateToGoiY()    { /* TODO */ }
+    private void navigateToHot()     { /* TODO */ }
+
+    private void showError(String msg) {
+        if (isAdded() && getContext() != null)
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }
