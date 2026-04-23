@@ -12,7 +12,7 @@
 
 
         <action
-            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            android:id="@+id/action_profileFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment"/>
 
         <action
