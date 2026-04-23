@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.viloi.FirebaseHelper;
 import com.example.viloi.R;
 
 import com.example.viloi.ui.adapter.DanhMucAdapter;
@@ -20,6 +21,9 @@ import com.example.viloi.ui.model.NguoiDung;
 import com.example.viloi.ui.model.NhaHang;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -147,8 +151,8 @@ public class HomeFragment extends Fragment {
 
     private void loadAllData() {
         loadDanhMuc();
-        loadGoiY();
         loadHot();
+        loadSuggestedRealtime();
     }
 
     // ── DANH MỤC ──────────────────────────────────
@@ -255,14 +259,52 @@ public class HomeFragment extends Fragment {
 
     // ── NAVIGATION ────────────────────────────────
     private void navigateToNhaHangDetail(NhaHang nhaHang) {
-        // Bundle b = new Bundle();
-        // b.putString("nhaHangId", nhaHang.getId());
-        // Navigation.findNavController(requireView()).navigate(R.id.action_home_to_detail, b);
+
+        FirebaseHelper.saveSearch(
+                nhaHang.getId(),
+                nhaHang.getTen()
+        );
+
         Toast.makeText(getContext(), nhaHang.getTen(), Toast.LENGTH_SHORT).show();
     }
 
     private void navigateToDanhMucDetail(DanhMuc danhMuc) {
         Toast.makeText(getContext(), danhMuc.getTen(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadSuggestedRealtime() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("nguoi_dung")
+                .child(user.getUid())
+                .child("lich_su_tim_kiem");
+
+        ref.get().addOnSuccessListener(snapshot -> {
+
+            goiYList.clear();
+
+            for (DataSnapshot data : snapshot.getChildren()) {
+
+                Long count = data.child("so_lan_tim").getValue(Long.class);
+
+                if (count != null && count >= 3) {
+
+                    String id = data.child("ma_nha_hang").getValue(String.class);
+                    String name = data.child("ten_nha_hang").getValue(String.class);
+
+                    NhaHang nh = new NhaHang();
+                    nh.setId(id);
+                    nh.setTen(name);
+
+                    goiYList.add(nh);
+                }
+            }
+
+            goiYAdapter.notifyDataSetChanged();
+        });
     }
 
     private void navigateToDanhMuc() { /* TODO */ }
