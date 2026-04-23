@@ -81,6 +81,10 @@ public class ThemDanhMucFragment extends Fragment {
             Toast.makeText(getContext(), "Đã nhập: " + t, Toast.LENGTH_SHORT).show();
         });
 
+        view.findViewById(R.id.btnBack_themdm).setOnClickListener(v -> {
+            requireActivity().onBackPressed();
+        });
+
         return view;
     }
 }

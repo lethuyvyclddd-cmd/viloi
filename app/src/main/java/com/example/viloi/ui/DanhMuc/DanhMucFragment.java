@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,8 +66,8 @@ public class DanhMucFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_danh_muc, container, false);
 
         view.findViewById(R.id.txtThemMoi).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ThemDanhMucFragment.class);
-            startActivity(intent);
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_danhMucFragment_to_themDanhMucFragment);
         });
 
         return view;

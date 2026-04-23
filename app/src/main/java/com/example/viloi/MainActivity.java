@@ -1,6 +1,7 @@
 package com.example.viloi;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,12 +14,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        // ánh xạ bottom nav
+
         bottomMenu = findViewById(R.id.bottom_menu);
 
         // lấy NavHostFragment
@@ -32,5 +34,15 @@ public class MainActivity extends AppCompatActivity {
         // gắn BottomNavigation với Navigation
         NavigationUI.setupWithNavController(bottomMenu, navController);
 
+        // ẨN / HIỆN menu theo màn hình
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+
+            if (destination.getId() == R.id.themDanhMucFragment) {
+                bottomMenu.setVisibility(View.GONE); // ẨN
+            } else {
+                bottomMenu.setVisibility(View.VISIBLE); // HIỆN
+            }
+
+        });
     }
 }
