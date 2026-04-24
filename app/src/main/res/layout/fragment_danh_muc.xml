@@ -81,19 +81,21 @@
                     android:src="@drawable/ic_search"
                     app:tint="#999999" />
 
-                <TextView
+                <EditText
                     android:id="@+id/et_search_dm"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="Tìm quán ăn, địa chỉ..."
                     android:textColorHint="#AAAAAA"
                     android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
                     android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:singleLine="true" />
+                    android:singleLine="true"/>
             </LinearLayout>
         </LinearLayout>
 
