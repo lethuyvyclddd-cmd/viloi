@@ -1,52 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- item_category.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-<<<<<<< HEAD
-    android:layout_height="100dp"
-=======
     android:layout_height="wrap_content"
->>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
     android:orientation="vertical"
     android:gravity="center"
-    android:layout_margin="8dp"
-    android:background="#FFFFFF"
-    android:elevation="2dp"
-    android:padding="8dp">
+    android:layout_marginHorizontal="4dp"
+    android:padding="4dp">
 
-    <!-- nền icon -->
+    <ImageView
+        android:id="@+id/btnBack_themdm"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_close_24px"
+        android:layout_marginLeft="16dp"
+        android:layout_gravity="top|end"/>
+
     <FrameLayout
-<<<<<<< HEAD
-        android:id="@+id/bg_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="#EEEEEE"
-        android:layout_gravity="center"
-        android:layout_marginBottom="6dp">
-=======
-        android:id="@+id/bgIcon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@drawable/bg_category_icon">
->>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
 
-        <!-- icon -->
         <ImageView
-            android:id="@+id/iv_category_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/iv_danhmuc_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_category_default" />
+            android:scaleType="centerCrop" />
     </FrameLayout>
 
-    <!-- tên -->
     <TextView
-        android:id="@+id/tv_category_name"
+        android:id="@+id/tv_danhmuc_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:maxLines="2"
         android:text="Danh mục"
-        android:textSize="13sp"
-        android:textColor="#1A1A1A"
-        android:textStyle="bold"
-        android:maxLines="1"/>
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:textAlignment="center" />
 
+    <TextView
+        android:id="@+id/tv_danhmuc_soluong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="5 địa điểm"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:textAlignment="center" />
 </LinearLayout>
