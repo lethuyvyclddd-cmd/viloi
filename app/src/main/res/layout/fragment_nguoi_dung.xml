@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:text="Người dùng"
                         android:textSize="11sp"
-                        android:textColor="#FF7043"
+                        android:textColor="#D84315"
                         android:background="#FFEBEE"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
