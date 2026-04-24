@@ -2,14 +2,9 @@ package com.example.viloi.ui.DanhMuc;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
-=======
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-
->>>>>>> ac4da02c2e3894bd602b4201d7a17915d56a4c0c
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DanhMucFragment extends Fragment {
-
-<<<<<<< HEAD
-=======
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
