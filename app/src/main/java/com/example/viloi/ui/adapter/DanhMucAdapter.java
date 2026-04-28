@@ -1,8 +1,6 @@
 package com.example.viloi.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,50 +33,32 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_category, parent, false);
-        return new ViewHolder(v);
+
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder h, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         DanhMuc dm = items.get(position);
 
-        // ===== TEXT =====
-        h.tvTen.setText(dm.getTen());
+        // ===== TÊN DANH MỤC =====
+        holder.tvTen.setText(dm.getTen());
 
-        // ===== COLOR =====
-        try {
-            String mau = dm.getMauSac();
-
-            if (mau != null && !mau.isEmpty()) {
-                int color = Color.parseColor(mau);
-
-                int bgColor = Color.argb(40,
-                        Color.red(color),
-                        Color.green(color),
-                        Color.blue(color));
-
-                h.bgIcon.setBackgroundTintList(
-                        android.content.res.ColorStateList.valueOf(bgColor)
-                );
-
-            } else {
-                h.bgIcon.setBackgroundTintList(
-                        android.content.res.ColorStateList.valueOf(Color.parseColor("#EEEEEE"))
-                );
-            }
-
-        } catch (Exception e) {
-            h.bgIcon.setBackgroundColor(Color.parseColor("#EEEEEE"));
-            h.ivIcon.clearColorFilter();
-        }
+        // ===== XÓA TOÀN BỘ MÀU NỀN =====
+        holder.bgIcon.setBackgroundTintList(null);
 
         // ===== LOAD ICON =====
-        Context ctx = h.itemView.getContext();
+        Context ctx = holder.itemView.getContext();
 
-        String iconName = dm.getIcon() != null ? dm.getIcon() : "ic_category_default";
+        String iconName = dm.getIcon();
+
+        if (iconName == null || iconName.trim().isEmpty()) {
+            iconName = "ic_category_default";
+        }
+
         Log.d("ICON_DEBUG", iconName);
 
         int resId = ctx.getResources().getIdentifier(
@@ -88,14 +68,16 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
         );
 
         if (resId != 0) {
-            h.ivIcon.setImageResource(resId);
+            holder.ivIcon.setImageResource(resId);
         } else {
-            h.ivIcon.setImageResource(R.drawable.ic_category_default);
+            holder.ivIcon.setImageResource(R.drawable.ic_category_default);
         }
 
-        // ===== CLICK =====
-        h.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onClick(dm);
+        // ===== CLICK ITEM =====
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(dm);
+            }
         });
     }
 
@@ -104,7 +86,9 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
         return items != null ? items.size() : 0;
     }
 
-    // ===== VIEW HOLDER =====
+    // ==================================================
+    // VIEW HOLDER
+    // ==================================================
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;

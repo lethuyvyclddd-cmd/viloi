@@ -59,7 +59,9 @@ public class DanhMucFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         // ===== SETUP RECYCLER =====
-        rvDanhMuc.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        rvDanhMuc.setLayoutManager(
+                new GridLayoutManager(getContext(), 4)
+        );
 
         adapter = new DanhMucAdapter(list, danhMuc -> {
             Log.d("CLICK_DM", "Clicked: " + danhMuc.getTen());
@@ -89,17 +91,13 @@ public class DanhMucFragment extends Fragment {
                     Log.d("FIREBASE_DM", "SIZE = " + snapshots.size());
 
                     for (QueryDocumentSnapshot doc : snapshots) {
-
-                        DanhMuc dm = doc.toObject(DanhMuc.class);
-                        dm.setId(doc.getId());
-
-                        // debug icon
-                        Log.d("DM_DATA",
-                                "ten=" + dm.getTen() +
-                                        " | icon=" + dm.getIcon() +
-                                        " | mau=" + dm.getMauSac());
-
-                        list.add(dm);
+                        try {
+                            DanhMuc dm = doc.toObject(DanhMuc.class);
+                            dm.setId(doc.getId());
+                            list.add(dm);
+                        } catch (Exception e) {
+                            Log.e("FIREBASE_ERROR", "Doc lỗi: " + doc.getId(), e);
+                        }
                     }
 
                     adapter.notifyDataSetChanged();

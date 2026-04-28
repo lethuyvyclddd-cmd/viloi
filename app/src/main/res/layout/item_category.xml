@@ -17,7 +17,7 @@
             android:id="@+id/iv_category_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerInside" />
+            android:scaleType="centerCrop" />
     </FrameLayout>
 
     <TextView
