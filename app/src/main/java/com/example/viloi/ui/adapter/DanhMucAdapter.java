@@ -2,6 +2,7 @@ package com.example.viloi.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +42,13 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
+
         DanhMuc dm = items.get(position);
 
+        // ===== TEXT =====
         h.tvTen.setText(dm.getTen());
 
-        // 🎨 MÀU ICON
+        // ===== COLOR =====
         try {
             String mau = dm.getMauSac();
 
@@ -57,23 +60,26 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
                         Color.green(color),
                         Color.blue(color));
 
-                h.bgIcon.setBackgroundColor(bgColor);
-                h.ivIcon.setColorFilter(color);
+                h.bgIcon.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(bgColor)
+                );
+
             } else {
-                h.bgIcon.setBackgroundColor(Color.LTGRAY);
-                h.ivIcon.setColorFilter(Color.DKGRAY);
+                h.bgIcon.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(Color.parseColor("#EEEEEE"))
+                );
             }
 
         } catch (Exception e) {
-            h.bgIcon.setBackgroundColor(Color.LTGRAY);
-            h.ivIcon.setColorFilter(Color.DKGRAY);
+            h.bgIcon.setBackgroundColor(Color.parseColor("#EEEEEE"));
+            h.ivIcon.clearColorFilter();
         }
 
-        // 🖼 LOAD ICON
+        // ===== LOAD ICON =====
         Context ctx = h.itemView.getContext();
 
-        String iconName = dm.getIconResourceName();
-        Log.d("ICON", iconName);
+        String iconName = dm.getIcon() != null ? dm.getIcon() : "ic_category_default";
+        Log.d("ICON_DEBUG", iconName);
 
         int resId = ctx.getResources().getIdentifier(
                 iconName,
@@ -87,7 +93,7 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
             h.ivIcon.setImageResource(R.drawable.ic_category_default);
         }
 
-        // 👆 CLICK
+        // ===== CLICK =====
         h.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onClick(dm);
         });
@@ -95,9 +101,10 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return items != null ? items.size() : 0;
     }
 
+    // ===== VIEW HOLDER =====
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;
