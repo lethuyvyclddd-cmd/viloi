@@ -47,8 +47,6 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
         // ===== TÊN DANH MỤC =====
         holder.tvTen.setText(dm.getTen());
 
-        // ===== XÓA TOÀN BỘ MÀU NỀN =====
-        holder.bgIcon.setBackgroundTintList(null);
 
         // ===== LOAD ICON =====
         Context ctx = holder.itemView.getContext();
@@ -92,14 +90,12 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;
-        View bgIcon;
         TextView tvTen;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ivIcon = itemView.findViewById(R.id.iv_category_icon);
-            bgIcon = itemView.findViewById(R.id.bg_icon);
             tvTen  = itemView.findViewById(R.id.tv_category_name);
         }
     }
