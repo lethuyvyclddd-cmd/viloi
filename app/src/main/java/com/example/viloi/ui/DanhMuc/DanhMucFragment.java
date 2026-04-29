@@ -64,9 +64,14 @@ public class DanhMucFragment extends Fragment {
         );
 
         adapter = new DanhMucAdapter(list, danhMuc -> {
-            Log.d("CLICK_DM", "Clicked: " + danhMuc.getTen());
-        });
 
+            Bundle bundle = new Bundle();
+            bundle.putString("maDanhMuc", danhMuc.getId());
+            bundle.putString("tenDanhMuc", danhMuc.getTen());
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.NhaHangFragment, bundle);
+        });
         rvDanhMuc.setAdapter(adapter);
 
         // ===== LOAD DATA =====

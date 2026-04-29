@@ -1,86 +1,103 @@
 package com.example.viloi.ui.NhaHang;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.*;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.viloi.R;
+import androidx.annotation.*;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NhaHangFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.viloi.R;
+import com.example.viloi.ui.adapter.NhaHangAdapter;
+import com.example.viloi.ui.model.NhaHang;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class NhaHangFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    TextView txtTenDanhMuc, txtThemNhaHang;
+    ImageView ivBack;
+    RecyclerView recyclerView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    FirebaseFirestore db;
 
-    private TextView txtThemNhaHang;;
+    List<NhaHang> list = new ArrayList<>();
+    NhaHangAdapter adapter;
 
+    String maDanhMuc, tenDanhMuc;
 
-    public NhaHangFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NhaHangFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NhaHangFragment newInstance(String param1, String param2) {
-        NhaHangFragment fragment = new NhaHangFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_nha_hang, container, false);
 
-        // ánh xạ
+        txtTenDanhMuc = view.findViewById(R.id.tetTenDanhMuc);
         txtThemNhaHang = view.findViewById(R.id.txtThemNhaHang);
-
-
-        // set click
         initClick();
+        ivBack = view.findViewById(R.id.ivBack);
+        recyclerView = view.findViewById(R.id.rv_DS_nha_hang);
+
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext())
+        );
+
+        adapter = new NhaHangAdapter(list);
+        recyclerView.setAdapter(adapter);
+
+        db = FirebaseFirestore.getInstance();
+
+        if (getArguments() != null) {
+            maDanhMuc = getArguments().getString("maDanhMuc");
+            tenDanhMuc = getArguments().getString("tenDanhMuc");
+        }
+
+        txtTenDanhMuc.setText(tenDanhMuc);
+
+        ivBack.setOnClickListener(v ->
+                NavHostFragment.findNavController(this).navigateUp());
+
+        loadData();
 
         return view;
     }
 
     private void initClick() {
-        txtThemNhaHang.setOnClickListener(v ->
-                requireActivity().getOnBackPressedDispatcher().onBackPressed());
 
+        txtThemNhaHang.setOnClickListener(v -> {
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.themNhaHangFragment);
+
+        });
+
+    }
+
+    private void loadData() {
+
+        db.collection("nha_hang")
+                .whereEqualTo("ma_danh_muc", maDanhMuc)
+                .whereEqualTo("hoat_dong", true)
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    list.clear();
+
+                    for (var doc : query.getDocuments()) {
+                        NhaHang nh = doc.toObject(NhaHang.class);
+                        nh.setId(doc.getId());
+                        list.add(nh);
+                    }
+
+                    adapter.notifyDataSetChanged();
+                });
     }
 }

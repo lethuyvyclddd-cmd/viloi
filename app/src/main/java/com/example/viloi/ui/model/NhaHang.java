@@ -41,8 +41,11 @@ public class NhaHang {
     @PropertyName("gio_mo_cua")
     private String gioMoCua;
 
-    @PropertyName("gia_mo_cua")
-    private String giaMoCua;
+    @PropertyName("gio_dong_cua")
+    private String gioDongCua;
+
+    @PropertyName("khoang_gia")
+    private String khoanggia;
 
     @PropertyName("hinh_anh")
     private List<String> hinhAnh;
@@ -112,8 +115,10 @@ public class NhaHang {
     public void setDienThoai(String v) { this.dienThoai = v; }
     public String getGioMoCua() { return gioMoCua; }
     public void setGioMoCua(String v) { this.gioMoCua = v; }
-    public String getGiaMoCua() { return giaMoCua; }
-    public void setGiaMoCua(String v) { this.giaMoCua = v; }
+    public String getGioDongCua() { return gioDongCua; }
+    public void setGioDongCua(String v) { this.gioDongCua = v; }
+    public String  getKhoanggia() { return khoanggia; }
+    public void setKhoangGia(String  v) { this.khoanggia = v; }
     public List<String> getHinhAnh() { return hinhAnh; }
     public void setHinhAnh(List<String> v) { this.hinhAnh = v; }
     public List<String> getThe() { return the; }

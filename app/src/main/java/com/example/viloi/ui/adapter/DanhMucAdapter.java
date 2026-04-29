@@ -34,7 +34,7 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_category, parent, false);
+                .inflate(R.layout.item_danhmuc, parent, false);
 
         return new ViewHolder(view);
     }

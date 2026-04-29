@@ -98,10 +98,10 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/ivFavoriteSearch"
+            android:id="@+id/ivChiTietQuan"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_favorite_24"
+            android:src="@drawable/ic_muiten_right_24px"
             android:padding="4dp"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>

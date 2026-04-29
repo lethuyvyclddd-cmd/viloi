@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
                     || id == R.id.SuaDanhMucFragment
                     || id == R.id.themNhaHangFragment
                     || id == R.id.SuaNhaHangFragment
-                    || id == R.id.NhaHangFragment) {
+                    || id == R.id.NhaHangFragment
+                    || id == R.id.lichSuTimKiemFragment
+                    || id == R.id.caiDatFragment) {
 
                 bottomMenu.setVisibility(View.GONE); // ẨN
 

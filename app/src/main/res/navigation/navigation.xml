@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
@@ -26,6 +27,10 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment"/>
+
+        <action
+            android:id="@+id/action_homeFragment_to_ChiTietNhaHangFragment"
+            app:destination="@+id/ChiTietNhaHangFragment"/>
 
     </fragment>
 
@@ -115,6 +120,9 @@
             android:id="@+id/action_favoriteFragment_to_profileFragment"
             app:destination="@id/profileFragment"/>
 
+        <action
+            android:id="@+id/action_favoriteFragment_to_ChiTietNhaHangFragment"
+            app:destination="@+id/ChiTietNhaHangFragment"/>
     </fragment>
 
     <!-- Hồ sơ -->
@@ -138,6 +146,14 @@
         <action
             android:id="@+id/action_favoriteFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment"/>
+
+        <action
+            android:id="@+id/action_profileFragment_to_lichSuTimKiemFragment"
+            app:destination="@id/lichSuTimKiemFragment"/>
+
+        <action
+            android:id="@+id/action_profileFragment_to_caiDatFragment"
+            app:destination="@id/caiDatFragment"/>
 
     </fragment>
 
@@ -174,6 +190,29 @@
             android:id="@+id/action_NhaHangFragment_to_SuaNhaHangFragment"
             app:destination="@id/SuaNhaHangFragment" />
 
+        <action
+            android:id="@+id/action_NhaHangFragment_to_ChiTietNhaHangFragment"
+            app:destination="@+id/ChiTietNhaHangFragment"/>
+
     </fragment>
+
+
+    <fragment
+        android:id="@+id/lichSuTimKiemFragment"
+        android:name="com.example.viloi.ui.timkiem.LichSuTimKiemFragment"
+        android:label="Lịch sử"
+        tools:layout="@layout/fragment_lich_su_tim_kiem"/>
+
+    <fragment
+        android:id="@+id/caiDatFragment"
+        android:name="com.example.viloi.ui.NguoiDung.CaiDatFragment"
+        android:label="Cài đặt"
+        tools:layout="@layout/fragment_cai_dat"/>
+
+    <fragment
+        android:id="@+id/ChiTietNhaHangFragment"
+        android:name="com.example.viloi.ui.NhaHang.ChiTietNhaHangFragment"
+        android:label="Cài đặt"
+        tools:layout="@layout/fragment_chi_tiet_nha_hang"/>
 
 </navigation>

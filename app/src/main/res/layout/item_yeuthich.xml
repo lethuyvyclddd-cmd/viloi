@@ -97,9 +97,10 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/imgXoaYeuThich"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_muiten_right_24px"
+            android:src="@drawable/ic_close_24px"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
