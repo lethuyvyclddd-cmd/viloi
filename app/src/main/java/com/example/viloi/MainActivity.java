@@ -34,15 +34,23 @@ public class MainActivity extends AppCompatActivity {
         // gắn BottomNavigation với Navigation
         NavigationUI.setupWithNavController(bottomMenu, navController);
 
-        // ẨN / HIỆN menu theo màn hình
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
 
-            if (destination.getId() == R.id.themDanhMucFragment) {
+            int id = destination.getId();
+
+            if (id == R.id.themDanhMucFragment
+                    || id == R.id.SuaDanhMucFragment
+                    || id == R.id.themNhaHangFragment
+                    || id == R.id.SuaNhaHangFragment
+                    || id == R.id.NhaHangFragment) {
+
                 bottomMenu.setVisibility(View.GONE); // ẨN
+
             } else {
                 bottomMenu.setVisibility(View.VISIBLE); // HIỆN
             }
 
         });
+
     }
 }

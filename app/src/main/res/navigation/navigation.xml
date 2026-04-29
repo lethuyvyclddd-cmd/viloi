@@ -57,6 +57,16 @@
         <action
             android:id="@+id/action_danhMucFragment_to_themDanhMucFragment"
             app:destination="@id/themDanhMucFragment" />
+
+        <action
+            android:id="@+id/action_danhMucFragment_to_SuaDanhMucFragment"
+            app:destination="@id/SuaDanhMucFragment" />
+
+        <action
+            android:id="@+id/action_danhMucFragment_to_NhaHangFragment"
+            app:destination="@id/NhaHangFragment" />
+
+
     </fragment>
 
     <!-- Tìm kiếm -->
@@ -136,8 +146,34 @@
         android:name="com.example.viloi.ui.DanhMuc.ThemDanhMucFragment"
         android:label="Thêm danh mục"/>
 
+    <fragment
+        android:id="@+id/themNhaHangFragment"
+        android:name="com.example.viloi.ui.NhaHang.ThemNhaHangFragment"
+        android:label="Thêm danh mục"/>
 
+    <fragment
+        android:id="@+id/SuaDanhMucFragment"
+        android:name="com.example.viloi.ui.DanhMuc.SuaDanhMucFragment"
+        android:label="Sửa danh mục"/>
 
+    <fragment
+        android:id="@+id/SuaNhaHangFragment"
+        android:name="com.example.viloi.ui.NhaHang.SuaNhaHangFragment"
+        android:label="Sửa nhà hàng"/>
 
+    <fragment
+        android:id="@+id/NhaHangFragment"
+        android:name="com.example.viloi.ui.NhaHang.NhaHangFragment"
+        android:label="Nhà hàng">
+
+        <action
+            android:id="@+id/action_NhaHangFragment_to_themNhaHangFragment"
+            app:destination="@id/themNhaHangFragment" />
+
+        <action
+            android:id="@+id/action_NhaHangFragment_to_SuaNhaHangFragment"
+            app:destination="@id/SuaNhaHangFragment" />
+
+    </fragment>
 
 </navigation>

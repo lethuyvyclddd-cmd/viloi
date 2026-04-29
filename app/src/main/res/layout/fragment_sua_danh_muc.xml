@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- BACK -->
+        <ImageView
+            android:id="@+id/btnBack_themdm"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_muiten" />
+
+        <!-- TITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:text="Sửa danh mục"
+            android:textColor="#1A1A1A"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- ── ten ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Tên danh mục *"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtSuaTenDanhMuc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_input"
+            android:hint="Nhập tên danh mục"
+            android:inputType="textCapWords"
+            android:padding="12dp"
+            android:textColor="#111111"
+            android:textColorHint="#999999"
+            android:textSize="14sp" />
+
+        <!-- ── mo_ta ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Mô tả"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtSuaMoTa"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_input"
+            android:hint="Mô tả danh mục (tuỳ chọn)"
+            android:padding="12dp"
+            android:textColor="#111111"
+            android:textColorHint="#999999"
+            android:textSize="14sp" />
+
+        <!-- ── icon ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="Tên icon"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtIconSua"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_input"
+            android:hint="Tên icon (vd: ic_luxury)"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="#111111"
+            android:textColorHint="#999999"
+            android:textSize="14sp" />
+
+        <!-- Hint nhỏ dưới ô icon -->
+        <TextView
+            android:id="@+id/tvHinhIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Bỏ trống → dùng icon mặc định"
+            android:textColor="#AAAAAA"
+            android:textSize="11sp" />
+
+        <!-- ── BUTTON ── -->
+        <Button
+            android:id="@+id/btnSuaDanhMuc"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="#FF6B35"
+            android:text="Sửa danh mục"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</ScrollView>
