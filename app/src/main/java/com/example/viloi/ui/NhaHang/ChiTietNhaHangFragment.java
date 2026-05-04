@@ -147,7 +147,7 @@ public class ChiTietNhaHangFragment extends Fragment {
                         : android.R.color.holo_red_dark, null));
 
         // Khoảng giá — format "20000-50000" → "20.000đ – 50.000đ"
-        tvKhoangGia.setText(formatGia(nh.getKhoanggia()));
+        tvKhoangGia.setText(formatGia(nh.getKhoangGia()));
 
         // Mô tả — dùng field "mo_ta" (không có trong model, lấy thủ công)
         // Nếu muốn thêm vào NhaHang model thì thêm field mo_ta

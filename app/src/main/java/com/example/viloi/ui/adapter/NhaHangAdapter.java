@@ -64,7 +64,7 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
         holder.tvSao.setText("⭐ " + nh.getRatingDisplay());
 
         // giá
-        holder.tvGia.setText(formatGia(nh.getKhoanggia()));
+        holder.tvGia.setText(formatGia(nh.getKhoangGia()));
 
         // lượt yêu thích
         holder.tvYeuThich.setText("❤️ " + nh.getLuotYeuThich());
