@@ -24,7 +24,7 @@ public class FirebaseHelper {
                 .child("lich_su_tim_kiem")
                 .child(restaurantId);
 
-        String time = Instant.now().toString();
+        String time = String.valueOf(System.currentTimeMillis());
 
         history.get().addOnSuccessListener(snapshot -> {
 

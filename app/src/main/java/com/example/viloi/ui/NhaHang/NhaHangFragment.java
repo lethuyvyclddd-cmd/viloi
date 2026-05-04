@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
@@ -50,7 +51,12 @@ public class NhaHangFragment extends Fragment {
                 new LinearLayoutManager(getContext())
         );
 
-        adapter = new NhaHangAdapter(list);
+        adapter = new NhaHangAdapter(list, nhaHang -> {
+            Bundle args = new Bundle();
+            args.putString(ChiTietNhaHangFragment.ARG_MA_NHA_HANG, nhaHang.getId());
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.ChiTietNhaHangFragment, args);
+        });
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
@@ -82,22 +88,24 @@ public class NhaHangFragment extends Fragment {
     }
 
     private void loadData() {
-
         db.collection("nha_hang")
                 .whereEqualTo("ma_danh_muc", maDanhMuc)
                 .whereEqualTo("hoat_dong", true)
                 .get()
                 .addOnSuccessListener(query -> {
-
                     list.clear();
-
                     for (var doc : query.getDocuments()) {
                         NhaHang nh = doc.toObject(NhaHang.class);
-                        nh.setId(doc.getId());
-                        list.add(nh);
+                        if (nh != null) {
+                            nh.setId(doc.getId());
+                            list.add(nh);
+                        }
                     }
-
                     adapter.notifyDataSetChanged();
-                });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Lỗi tải dữ liệu: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                );
     }
 }

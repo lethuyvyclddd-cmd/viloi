@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.viloi.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,7 +74,6 @@ public class NguoiDungFragment extends Fragment {
         tvFavoriteCount  = view.findViewById(R.id.tvFavoriteCount);
         tvVisitCount     = view.findViewById(R.id.tvVisitCount);
         tvReviewCount    = view.findViewById(R.id.tvReviewCount);
-        layoutFavorites  = view.findViewById(R.id.layoutFavorites);
         layoutHistory    = view.findViewById(R.id.layoutHistory);
         layoutMyReviews  = view.findViewById(R.id.layoutMyReviews);
         layoutSettings   = view.findViewById(R.id.layoutSettings);
@@ -219,7 +219,6 @@ public class NguoiDungFragment extends Fragment {
         }
 
         // Quán yêu thích
-        layoutFavorites.setOnClickListener(v -> navigateToFavorites());
 
         // Lịch sử tìm kiếm
         layoutHistory.setOnClickListener(v -> navigateToHistory());
@@ -243,15 +242,10 @@ public class NguoiDungFragment extends Fragment {
         Toast.makeText(getContext(), "Chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
     }
 
-    private void navigateToFavorites() {
-        // Navigation.findNavController(requireView())
-        //           .navigate(R.id.action_hoSo_to_yeuThich);
-        Toast.makeText(getContext(), "Quán yêu thích", Toast.LENGTH_SHORT).show();
-    }
 
     private void navigateToHistory() {
-        // Navigation.findNavController(requireView())
-        //           .navigate(R.id.action_hoSo_to_lichSu);
+        androidx.navigation.Navigation.findNavController(requireView())
+                        .navigate(R.id.action_profileFragment_to_lichSuTimKiemFragment);
         Toast.makeText(getContext(), "Lịch sử tìm kiếm", Toast.LENGTH_SHORT).show();
     }
 
@@ -262,8 +256,8 @@ public class NguoiDungFragment extends Fragment {
     }
 
     private void navigateToSettings() {
-        // Navigation.findNavController(requireView())
-        //           .navigate(R.id.action_hoSo_to_settings);
+        androidx.navigation.Navigation.findNavController(requireView())
+                .navigate(R.id.action_profileFragment_to_caiDatFragment);
         Toast.makeText(getContext(), "Cài đặt", Toast.LENGTH_SHORT).show();
     }
 

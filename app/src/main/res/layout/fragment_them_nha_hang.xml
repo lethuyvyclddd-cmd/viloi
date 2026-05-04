@@ -141,15 +141,15 @@
                     android:textColor="#666666"
                     android:layout_marginBottom="4dp"/>
 
+                <!-- Price -->
                 <Spinner
                     android:id="@+id/spinnerDanhMuc"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/spinner_background"
-                    android:padding="12dp"
-                    android:layout_marginBottom="12dp"/>
+                    android:padding="12dp" />
 
-                <!-- Price -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                         android:id="@+id/edtKhoangGia"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="text"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Description -->

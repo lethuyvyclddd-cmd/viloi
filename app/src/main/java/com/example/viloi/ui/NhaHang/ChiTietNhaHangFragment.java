@@ -1,5 +1,7 @@
 package com.example.viloi.ui.NhaHang;
 
+import static android.text.TextUtils.isEmpty;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -123,17 +125,15 @@ public class ChiTietNhaHangFragment extends Fragment {
         tvSoLuongDanhGia.setText("(" + nh.getSoLuongDanhGia() + " đánh giá)");
 
         // Địa chỉ đầy đủ
-        String dc = nh.getDiaChiDayDu() != null ? nh.getDiaChiDayDu() : nh.getDiaChi();
+        String dc = (!isEmpty(nh.getDiaChiDayDu()))
+                ? nh.getDiaChiDayDu()
+                : nh.getDiaChi();
+
         tvDiaChi.setText(dc != null ? dc : "");
 
         // Điện thoại — bấm để gọi
-        if (nh.getDienThoai() != null) {
+        if (nh.getDienThoai() != null && !nh.getDienThoai().isEmpty()) {
             tvDienThoai.setText(nh.getDienThoai());
-            tvDienThoai.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_DIAL,
-                        Uri.parse("tel:" + nh.getDienThoai()));
-                startActivity(intent);
-            });
         }
 
         // Giờ mở cửa
@@ -170,24 +170,17 @@ public class ChiTietNhaHangFragment extends Fragment {
         tvLuotTim.setText(String.valueOf(nh.getLuotTimKiem()));
         tvLuotYeuThich.setText(String.valueOf(nh.getLuotYeuThich()));
 
-        // Load ảnh (dùng Glide nếu có)
-        // String anhUrl = nh.getFirstImageUrl();
-        // if (anhUrl != null) Glide.with(this).load(anhUrl).into(ivAnh);
+        String path = nh.getFirstImageUrl();
 
-        // Load mo_ta riêng vì chưa có trong model
-        loadMoTa();
+        if (path != null) {
+            ivAnh.setImageURI(Uri.fromFile(new java.io.File(path)));
+        }
+
+        tvMoTa.setText(nh.getMoTa() != null ? nh.getMoTa() : "");
+
     }
 
     /** Load thêm field mo_ta chưa có trong NhaHang model */
-    private void loadMoTa() {
-        db.collection("nha_hang").document(maNhaHang)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (!isAdded()) return;
-                    String moTa = doc.getString("mo_ta");
-                    if (moTa != null) tvMoTa.setText(moTa);
-                });
-    }
 
     // ─── Kiểm tra đã yêu thích chưa ─────────────────────────
     // yeu_thich là nested MAP trong document nguoi_dung/{userId}
@@ -259,10 +252,12 @@ public class ChiTietNhaHangFragment extends Fragment {
     }
 
     // ─── Helpers ─────────────────────────────────────────────
+    private String getGioMoCua(NhaHang nh) {
+        return nh.getGioMoCua() != null ? nh.getGioMoCua() : "07:00";
+    }
+
     private String getGioDongCua(NhaHang nh) {
-        // Field gio_dong_cua chưa có trong model, đọc thủ công ở loadMoTa
-        // Tạm return chuỗi rỗng, sẽ update sau khi load xong
-        return "?";
+        return nh.getGioDongCua() != null ? nh.getGioDongCua() : "21:00";
     }
 
     /** Kiểm tra có đang trong giờ mở cửa không (đơn giản) */

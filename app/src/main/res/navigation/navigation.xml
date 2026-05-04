@@ -95,17 +95,9 @@
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
 
-        <!-- ACTION CHUẨN -->
-        <fragment
-            android:id="@+id/searchFragment"
-            android:name="com.example.viloi.ui.timkiem.TimFragment"
-            android:label="Tìm kiếm">
-
-            <action
-                android:id="@+id/action_searchFragment_to_ChiTietNhaHangFragment"
-                app:destination="@id/ChiTietNhaHangFragment" />
-
-        </fragment>
+        <action
+            android:id="@+id/action_searchFragment_to_ChiTietNhaHangFragment"
+            app:destination="@id/ChiTietNhaHangFragment" />
 
         <!-- GIỮ TƯƠNG THÍCH CODE CŨ -->
         <action

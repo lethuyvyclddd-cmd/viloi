@@ -1,6 +1,5 @@
 package com.example.viloi.ui.adapter;
 
-
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -14,46 +13,59 @@ public class TimKiemAdapter extends RecyclerView.Adapter<TimKiemAdapter.VH> {
     public interface OnClick { void onClick(NhaHang nh); }
 
     private final List<NhaHang> list;
-    private final OnClick       callback;
+    private final OnClick callback;
 
     public TimKiemAdapter(List<NhaHang> list, OnClick callback) {
-        this.list     = list;
+        this.list = list;
         this.callback = callback;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_nha_hang_search, parent, false);
+                .inflate(R.layout.item_nha_hang, parent, false);
         return new VH(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VH h, int position) {
         NhaHang nh = list.get(position);
+
         h.tvTen.setText(nh.getTen() != null ? nh.getTen() : "");
         h.tvDiaChi.setText(nh.getDiaChi() != null ? nh.getDiaChi() : "");
-        h.tvDanhMuc.setText(nh.getTenDanhMuc() != null ? nh.getTenDanhMuc() : "");
-        h.tvSao.setText(nh.getRatingDisplay());
-        h.tvLuotXem.setText(nh.getLuotXemDisplay());
+        h.tvSao.setText("⭐ " + nh.getRatingDisplay());
+
+        // ✅ thêm hiển thị giá + yêu thích (XML có sẵn)
+        h.tvGia.setText(nh.getKhoangGia() != null ? nh.getKhoangGia() : "");
+        h.tvYeuThich.setText("❤️ " + nh.getLuotYeuThich());
 
         h.itemView.setOnClickListener(v -> {
             int pos = h.getAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) callback.onClick(list.get(pos));
+            if (pos != RecyclerView.NO_POSITION) {
+                callback.onClick(list.get(pos));
+            }
         });
     }
 
-    @Override public int getItemCount() { return list.size(); }
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView tvTen, tvDiaChi, tvDanhMuc, tvSao, tvLuotXem;
+
+        TextView tvTen, tvDiaChi, tvSao, tvGia, tvYeuThich;
+
         VH(@NonNull View v) {
             super(v);
-            tvTen     = v.findViewById(R.id.tvTenNhaHang);
-            tvDiaChi  = v.findViewById(R.id.tvDiaChi);
-            tvDanhMuc = v.findViewById(R.id.tvDanhMuc);
-            tvSao     = v.findViewById(R.id.tvSao);
-            tvLuotXem = v.findViewById(R.id.tvLuotXem);
+
+            // ✅ FIX đúng ID theo XML
+            tvTen      = v.findViewById(R.id.tvTen);
+            tvDiaChi   = v.findViewById(R.id.tvDiaChi);
+            tvSao      = v.findViewById(R.id.tvSao);
+            tvGia      = v.findViewById(R.id.tvGia);
+            tvYeuThich = v.findViewById(R.id.tvYeuThich);
         }
     }
 }

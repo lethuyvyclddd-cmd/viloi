@@ -1,5 +1,6 @@
 package com.example.viloi.ui.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,19 +41,26 @@ public class GoiYAdapter extends RecyclerView.Adapter<GoiYAdapter.ViewHolder> {
         NhaHang nh = items.get(position);
 
         h.tvTen.setText(nh.getTen());
-        h.tvDiaChi.setText(nh.getDiaChi());
+        String dc = nh.getDiaChiDayDu() != null
+                ? nh.getDiaChiDayDu() : nh.getDiaChi();;
+        h.tvDiaChi.setText(dc);
+
         h.tvRating.setText(nh.getRatingDisplay());
+
         h.tvLuotTimKiem.setText(nh.getLuotTimKiemDisplay());
         // Badge: "Đã tìm 5 lần"
         h.tvBadge.setText(nh.getLuotTimKiemDisplay());
 
-        String imgUrl = nh.getFirstImageUrl();
-        if (imgUrl != null) {
+        String path = nh.getFirstImageUrl();
+        if (path != null && !path.isEmpty()) {
             Glide.with(h.itemView.getContext())
-                    .load(imgUrl)
-                    .placeholder(R.drawable.ic_food_placeholder)
+                    .load(path.startsWith("/") ? new java.io.File(path) : Uri.parse(path))
+                    .placeholder(R.drawable.ic_category_default)
+                    .error(R.drawable.ic_category_default)
                     .centerCrop()
                     .into(h.ivHinhAnh);
+        } else {
+            h.ivHinhAnh.setImageResource(R.drawable.ic_category_default);
         }
 
         h.itemView.setOnClickListener(v -> { if (listener != null) listener.onClick(nh); });

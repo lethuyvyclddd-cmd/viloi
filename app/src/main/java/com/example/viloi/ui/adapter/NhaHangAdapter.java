@@ -1,6 +1,7 @@
 package com.example.viloi.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.viloi.R;
 import com.example.viloi.ui.model.NhaHang;
 
@@ -50,33 +52,40 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
 
         NhaHang nh = items.get(position);
 
-        // tên nhà hàng
+        // Tên
         holder.tvTen.setText(nh.getTen());
 
-        // địa chỉ
-        holder.tvDiaChi.setText(
-                nh.getDiaChiDayDu() != null
-                        ? nh.getDiaChiDayDu()
-                        : nh.getDiaChi()
-        );
+        // Địa chỉ
+        String diaChi = nh.getDiaChiDayDu() != null
+                ? nh.getDiaChiDayDu()
+                : nh.getDiaChi();
+        holder.tvDiaChi.setText(diaChi);
 
-        // sao đánh giá
+        // Rating
         holder.tvSao.setText("⭐ " + nh.getRatingDisplay());
 
-        // giá
+        // Giá
         holder.tvGia.setText(formatGia(nh.getKhoangGia()));
 
-        // lượt yêu thích
+        // Yêu thích
         holder.tvYeuThich.setText("❤️ " + nh.getLuotYeuThich());
 
-        // icon mặc định
-        holder.ivAnh.setImageResource(R.drawable.ic_category_default);
+        // Ảnh
+        String path = nh.getFirstImageUrl();
+        if (path != null && !path.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(path.startsWith("/") ? new java.io.File(path) : Uri.parse(path))
+                    .placeholder(R.drawable.ic_category_default)
+                    .error(R.drawable.ic_category_default)
+                    .centerCrop()
+                    .into(holder.ivAnh);
+        } else {
+            holder.ivAnh.setImageResource(R.drawable.ic_category_default);
+        }
 
-        // click item
+        // Click
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onClick(nh);
-            }
+            if (listener != null) listener.onClick(nh);
         });
     }
 
