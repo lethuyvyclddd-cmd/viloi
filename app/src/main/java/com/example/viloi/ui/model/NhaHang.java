@@ -117,8 +117,16 @@ public class NhaHang {
     public void setGioMoCua(String v) { this.gioMoCua = v; }
     public String getGioDongCua() { return gioDongCua; }
     public void setGioDongCua(String v) { this.gioDongCua = v; }
-    public String  getKhoanggia() { return khoanggia; }
-    public void setKhoangGia(String  v) { this.khoanggia = v; }
+    @PropertyName("khoang_gia")
+    private String khoangGia;
+
+    public String getKhoangGia() {
+        return khoangGia;
+    }
+
+    public void setKhoangGia(String khoangGia) {
+        this.khoangGia = khoangGia;
+    }
     public List<String> getHinhAnh() { return hinhAnh; }
     public void setHinhAnh(List<String> v) { this.hinhAnh = v; }
     public List<String> getThe() { return the; }

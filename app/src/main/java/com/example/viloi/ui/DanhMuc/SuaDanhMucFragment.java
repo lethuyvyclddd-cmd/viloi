@@ -1,66 +1,105 @@
 package com.example.viloi.ui.DanhMuc;
 
 import android.os.Bundle;
-
+import android.view.*;
+import android.widget.*;
+import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.navigation.Navigation;
 
 import com.example.viloi.R;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.*;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SuaDanhMucFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class SuaDanhMucFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String ARG_MA_DANH_MUC = "maDanhMuc";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText edtTen, edtMoTa, edtIcon;
+    private Button   btnSua;
+    private FirebaseFirestore db;
+    private String maDanhMuc;
 
-    public SuaDanhMucFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SuaDanhMucFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SuaDanhMucFragment newInstance(String param1, String param2) {
-        SuaDanhMucFragment fragment = new SuaDanhMucFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    @Nullable @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sua_danh_muc, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        if (getArguments() != null)
+            maDanhMuc = getArguments().getString(ARG_MA_DANH_MUC);
+
+        edtTen  = view.findViewById(R.id.edtSuaTenDanhMuc);
+        edtMoTa = view.findViewById(R.id.edtSuaMoTa);
+        edtIcon = view.findViewById(R.id.edtIconSua);
+        btnSua  = view.findViewById(R.id.btnSuaDanhMuc);
+
+        view.findViewById(R.id.btnBack_themdm).setOnClickListener(v ->
+                Navigation.findNavController(v).navigateUp());
+
+        if (maDanhMuc != null) loadDanhMuc();
+
+        btnSua.setOnClickListener(v -> validate());
+    }
+
+    private void loadDanhMuc() {
+        db.collection("danh_muc").document(maDanhMuc)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded() || !doc.exists()) return;
+                    String ten  = doc.getString("ten");
+                    String moTa = doc.getString("mo_ta");
+                    String icon = doc.getString("icon");
+                    if (ten  != null) edtTen.setText(ten);
+                    if (moTa != null) edtMoTa.setText(moTa);
+                    if (icon != null) edtIcon.setText(icon);
+                });
+    }
+
+    private void validate() {
+        String ten = edtTen.getText().toString().trim();
+        if (ten.isEmpty()) {
+            edtTen.setError("Bắt buộc");
+            return;
+        }
+        btnSua.setEnabled(false);
+        btnSua.setText("Đang lưu...");
+        luu(ten);
+    }
+
+    private void luu(String ten) {
+        String moTa = edtMoTa.getText().toString().trim();
+        String icon = edtIcon.getText().toString().trim();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("ten",          ten);
+        data.put("mo_ta",        moTa);
+        data.put("cap_nhat_luc", Timestamp.now());
+        if (!icon.isEmpty()) data.put("icon", icon);
+
+        db.collection("danh_muc").document(maDanhMuc)
+                .update(data)
+                .addOnSuccessListener(unused -> {
+                    if (!isAdded()) return;
+                    Toast.makeText(getContext(), "Đã cập nhật danh mục ✓",
+                            Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigateUp();
+                })
+                .addOnFailureListener(e -> {
+                    if (!isAdded()) return;
+                    btnSua.setEnabled(true);
+                    btnSua.setText("Sửa danh mục");
+                    Toast.makeText(getContext(), "Lỗi: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
     }
 }

@@ -5,59 +5,58 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- Trang chủ -->
+    <!-- ================================================= -->
+    <!-- HOME -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.viloi.ui.home.HomeFragment"
         android:label="Trang chủ">
 
-
-        <action
-            android:id="@+id/action_profileFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment"/>
-
         <action
             android:id="@+id/action_homeFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment"/>
+            app:destination="@id/categoryFragment" />
 
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment"/>
+            app:destination="@id/searchFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
 
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment"/>
+            app:destination="@id/profileFragment" />
 
         <action
             android:id="@+id/action_homeFragment_to_ChiTietNhaHangFragment"
-            app:destination="@+id/ChiTietNhaHangFragment"/>
-
+            app:destination="@id/ChiTietNhaHangFragment" />
     </fragment>
 
-
-
-
-    <!-- Danh mục -->
+    <!-- ================================================= -->
+    <!-- CATEGORY -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.example.viloi.ui.DanhMuc.DanhMucFragment"
-        android:label="Danh mục" >
+        android:label="Danh mục">
 
         <action
             android:id="@+id/action_categoryFragment_to_homeFragment"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/homeFragment" />
 
         <action
             android:id="@+id/action_categoryFragment_to_searchFragment"
-            app:destination="@id/searchFragment"/>
+            app:destination="@id/searchFragment" />
 
         <action
             android:id="@+id/action_categoryFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment"/>
+            app:destination="@id/favoriteFragment" />
 
         <action
             android:id="@+id/action_categoryFragment_to_profileFragment"
-            app:destination="@id/profileFragment"/>
+            app:destination="@id/profileFragment" />
 
         <action
             android:id="@+id/action_danhMucFragment_to_themDanhMucFragment"
@@ -70,113 +69,138 @@
         <action
             android:id="@+id/action_danhMucFragment_to_NhaHangFragment"
             app:destination="@id/NhaHangFragment" />
-
-
     </fragment>
 
-    <!-- Tìm kiếm -->
+    <!-- ================================================= -->
+    <!-- SEARCH -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.viloi.ui.timkiem.TimFragment"
-        android:label="Tìm kiếm" >
+        android:label="Tìm kiếm">
 
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/homeFragment" />
 
         <action
             android:id="@+id/action_searchFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment"/>
+            app:destination="@id/categoryFragment" />
 
         <action
             android:id="@+id/action_searchFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment"/>
+            app:destination="@id/favoriteFragment" />
 
         <action
             android:id="@+id/action_searchFragment_to_profileFragment"
-            app:destination="@id/profileFragment"/>
+            app:destination="@id/profileFragment" />
 
+        <!-- ACTION CHUẨN -->
+        <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.example.viloi.ui.timkiem.TimFragment"
+            android:label="Tìm kiếm">
+
+            <action
+                android:id="@+id/action_searchFragment_to_ChiTietNhaHangFragment"
+                app:destination="@id/ChiTietNhaHangFragment" />
+
+        </fragment>
+
+        <!-- GIỮ TƯƠNG THÍCH CODE CŨ -->
+        <action
+            android:id="@+id/action_timKiem_to_chiTietNhaHangFragment"
+            app:destination="@id/ChiTietNhaHangFragment" />
     </fragment>
 
-    <!-- Yêu thích -->
+    <!-- ================================================= -->
+    <!-- FAVORITE -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.viloi.ui.yeuthich.YeuThichFragment"
-        android:label="Yêu thích" >
+        android:label="Yêu thích">
 
         <action
             android:id="@+id/action_favoriteFragment_to_homeFragment"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/homeFragment" />
 
         <action
             android:id="@+id/action_favoriteFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment"/>
+            app:destination="@id/categoryFragment" />
 
         <action
             android:id="@+id/action_favoriteFragment_to_searchFragment"
-            app:destination="@id/searchFragment"/>
+            app:destination="@id/searchFragment" />
 
         <action
             android:id="@+id/action_favoriteFragment_to_profileFragment"
-            app:destination="@id/profileFragment"/>
+            app:destination="@id/profileFragment" />
 
         <action
             android:id="@+id/action_favoriteFragment_to_ChiTietNhaHangFragment"
-            app:destination="@+id/ChiTietNhaHangFragment"/>
+            app:destination="@id/ChiTietNhaHangFragment" />
     </fragment>
 
-    <!-- Hồ sơ -->
+    <!-- ================================================= -->
+    <!-- PROFILE -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.viloi.ui.NguoiDung.NguoiDungFragment"
-        android:label="Hồ sơ" >
+        android:label="Hồ sơ">
 
         <action
             android:id="@+id/action_profileFragment_to_homeFragment"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/homeFragment" />
 
         <action
             android:id="@+id/action_profileFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment"/>
+            app:destination="@id/categoryFragment" />
 
         <action
             android:id="@+id/action_profileFragment_to_searchFragment"
-            app:destination="@id/searchFragment"/>
+            app:destination="@id/searchFragment" />
 
         <action
-            android:id="@+id/action_favoriteFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment"/>
+            android:id="@+id/action_profileFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
 
         <action
             android:id="@+id/action_profileFragment_to_lichSuTimKiemFragment"
-            app:destination="@id/lichSuTimKiemFragment"/>
+            app:destination="@id/lichSuTimKiemFragment" />
 
         <action
             android:id="@+id/action_profileFragment_to_caiDatFragment"
-            app:destination="@id/caiDatFragment"/>
-
+            app:destination="@id/caiDatFragment" />
     </fragment>
 
+    <!-- ================================================= -->
+    <!-- CRUD -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/themDanhMucFragment"
         android:name="com.example.viloi.ui.DanhMuc.ThemDanhMucFragment"
-        android:label="Thêm danh mục"/>
+        android:label="Thêm danh mục" />
 
     <fragment
         android:id="@+id/themNhaHangFragment"
         android:name="com.example.viloi.ui.NhaHang.ThemNhaHangFragment"
-        android:label="Thêm danh mục"/>
+        android:label="Thêm nhà hàng" />
 
     <fragment
         android:id="@+id/SuaDanhMucFragment"
         android:name="com.example.viloi.ui.DanhMuc.SuaDanhMucFragment"
-        android:label="Sửa danh mục"/>
+        android:label="Sửa danh mục" />
 
     <fragment
         android:id="@+id/SuaNhaHangFragment"
         android:name="com.example.viloi.ui.NhaHang.SuaNhaHangFragment"
-        android:label="Sửa nhà hàng"/>
+        android:label="Sửa nhà hàng" />
 
+    <!-- ================================================= -->
+    <!-- NHÀ HÀNG -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/NhaHangFragment"
         android:name="com.example.viloi.ui.NhaHang.NhaHangFragment"
@@ -192,27 +216,28 @@
 
         <action
             android:id="@+id/action_NhaHangFragment_to_ChiTietNhaHangFragment"
-            app:destination="@+id/ChiTietNhaHangFragment"/>
-
+            app:destination="@id/ChiTietNhaHangFragment" />
     </fragment>
 
-
+    <!-- ================================================= -->
+    <!-- OTHERS -->
+    <!-- ================================================= -->
     <fragment
         android:id="@+id/lichSuTimKiemFragment"
         android:name="com.example.viloi.ui.timkiem.LichSuTimKiemFragment"
         android:label="Lịch sử"
-        tools:layout="@layout/fragment_lich_su_tim_kiem"/>
+        tools:layout="@layout/fragment_lich_su_tim_kiem" />
 
     <fragment
         android:id="@+id/caiDatFragment"
         android:name="com.example.viloi.ui.NguoiDung.CaiDatFragment"
         android:label="Cài đặt"
-        tools:layout="@layout/fragment_cai_dat"/>
+        tools:layout="@layout/fragment_cai_dat" />
 
     <fragment
         android:id="@+id/ChiTietNhaHangFragment"
         android:name="com.example.viloi.ui.NhaHang.ChiTietNhaHangFragment"
-        android:label="Cài đặt"
-        tools:layout="@layout/fragment_chi_tiet_nha_hang"/>
+        android:label="Chi tiết nhà hàng"
+        tools:layout="@layout/fragment_chi_tiet_nha_hang" />
 
 </navigation>
