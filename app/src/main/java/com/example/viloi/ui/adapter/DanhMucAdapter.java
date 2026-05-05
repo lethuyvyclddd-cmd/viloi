@@ -1,7 +1,6 @@
 package com.example.viloi.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,10 @@ import java.util.List;
 
 public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHolder> {
 
+    // ===== INTERFACE FIX =====
     public interface OnClickListener {
         void onClick(DanhMuc danhMuc);
+        void onLongClick(DanhMuc danhMuc);
     }
 
     private final List<DanhMuc> items;
@@ -35,7 +36,6 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_danhmuc, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -44,20 +44,15 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
 
         DanhMuc dm = items.get(position);
 
-        // ===== TÊN DANH MỤC =====
         holder.tvTen.setText(dm.getTen());
 
-
-        // ===== LOAD ICON =====
+        // ===== ICON LOAD =====
         Context ctx = holder.itemView.getContext();
 
         String iconName = dm.getIcon();
-
         if (iconName == null || iconName.trim().isEmpty()) {
             iconName = "ic_category_default";
         }
-
-        Log.d("ICON_DEBUG", iconName);
 
         int resId = ctx.getResources().getIdentifier(
                 iconName,
@@ -65,17 +60,23 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
                 ctx.getPackageName()
         );
 
-        if (resId != 0) {
-            holder.ivIcon.setImageResource(resId);
-        } else {
-            holder.ivIcon.setImageResource(R.drawable.ic_category_default);
-        }
+        holder.ivIcon.setImageResource(
+                resId != 0 ? resId : R.drawable.ic_category_default
+        );
 
-        // ===== CLICK ITEM =====
+        // ===== CLICK =====
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onClick(dm);
             }
+        });
+
+        // ===== LONG CLICK =====
+        holder.itemView.setOnLongClickListener(v -> {
+            if (listener != null) {
+                listener.onLongClick(dm);
+            }
+            return true;
         });
     }
 
@@ -84,9 +85,6 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
         return items != null ? items.size() : 0;
     }
 
-    // ==================================================
-    // VIEW HOLDER
-    // ==================================================
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;
@@ -94,9 +92,8 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             ivIcon = itemView.findViewById(R.id.iv_category_icon);
-            tvTen  = itemView.findViewById(R.id.tv_category_name);
+            tvTen = itemView.findViewById(R.id.tv_category_name);
         }
     }
 }

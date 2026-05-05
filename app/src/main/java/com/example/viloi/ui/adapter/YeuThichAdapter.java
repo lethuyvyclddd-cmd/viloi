@@ -5,7 +5,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.viloi.R;
-import com.example.viloi.ui.model.NhaHang;  // ← import model thật
+import com.example.viloi.ui.model.NhaHang;  
 import java.util.List;
 
 public class YeuThichAdapter extends RecyclerView.Adapter<YeuThichAdapter.VH> {

@@ -38,6 +38,7 @@ public class TimFragment extends Fragment {
     private ChipGroup chipGroupDanhmuc;
     private RecyclerView rvSearch;
     private TextView tvSoKetQua;
+    private TextView tvEmpty;
 
     private TimKiemAdapter adapter;
 
@@ -54,7 +55,7 @@ public class TimFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_tim, container, false);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class TimFragment extends Fragment {
         }
 
         bindView(view);
-        setupRecycler(view);
+        setupRecycler();
         setupSearch();
         loadData();
     }
@@ -79,9 +80,10 @@ public class TimFragment extends Fragment {
         chipGroupDanhmuc = view.findViewById(R.id.chipGroupDanhmuc);
         rvSearch = view.findViewById(R.id.rvSearchLichsutim);
         tvSoKetQua = view.findViewById(R.id.tvSoKetQua);
+        tvEmpty = view.findViewById(R.id.tvEmpty);
     }
 
-    private void setupRecycler(View view) {
+    private void setupRecycler() {
 
         adapter = new TimKiemAdapter(hienThi, nhaHang -> {
 
@@ -93,20 +95,16 @@ public class TimFragment extends Fragment {
                     nhaHang.getId()
             );
 
-            Navigation.findNavController(view)
+            Navigation.findNavController(requireView())
                     .navigate(
                             R.id.action_searchFragment_to_ChiTietNhaHangFragment,
                             args
                     );
         });
 
-        rvSearch.setLayoutManager(
-                new LinearLayoutManager(getContext())
-        );
-
+        rvSearch.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSearch.setAdapter(adapter);
     }
-
     private void setupSearch() {
 
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -130,8 +128,8 @@ public class TimFragment extends Fragment {
             }
         });
 
-        chipGroupDanhmuc.setOnCheckedStateChangeListener(
-                (group, checkedIds) -> locDuLieu()
+        chipGroupDanhmuc.setOnCheckedChangeListener(
+                (group, checkedId) -> locDuLieu()
         );
     }
 
@@ -167,25 +165,23 @@ public class TimFragment extends Fragment {
         chipTatCa.setText("Tất cả");
         chipTatCa.setCheckable(true);
         chipTatCa.setChecked(true);
+        chipTatCa.setId(View.generateViewId()); // FIX
         chipGroupDanhmuc.addView(chipTatCa);
 
         List<String> dsDanhMuc = new ArrayList<>();
 
         for (NhaHang nh : tatCa) {
-
             String ten = nh.getTenDanhMuc();
-
             if (ten != null && !dsDanhMuc.contains(ten)) {
                 dsDanhMuc.add(ten);
             }
         }
 
         for (String tenDm : dsDanhMuc) {
-
             Chip chip = new Chip(requireContext());
             chip.setText(tenDm);
             chip.setCheckable(true);
-
+            chip.setId(View.generateViewId()); // FIX
             chipGroupDanhmuc.addView(chip);
         }
     }
@@ -248,6 +244,13 @@ public class TimFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
         tvSoKetQua.setText(hienThi.size() + " kết quả");
+        if (hienThi.isEmpty()) {
+            tvEmpty.setVisibility(View.VISIBLE);
+            rvSearch.setVisibility(View.GONE);
+        } else {
+            tvEmpty.setVisibility(View.GONE);
+            rvSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     private void luuLichSuTimKiem(NhaHang nhaHang) {
@@ -257,17 +260,16 @@ public class TimFragment extends Fragment {
         HashMap<String, Object> data = new HashMap<>();
         data.put("ma_nha_hang", nhaHang.getId());
         data.put("ten_nha_hang", nhaHang.getTen());
-        data.put("thoi_gian", FieldValue.serverTimestamp());
+        data.put("thoi_gian", new com.google.firebase.Timestamp(new java.util.Date()));
 
+        // FIX: dùng add thay vì document(id)
         db.collection("nguoi_dung")
                 .document(userId)
                 .collection("lich_su_tim_kiem")
-                .document(nhaHang.getId())
-                .set(data);
+                .add(data);
 
         db.collection("nha_hang")
                 .document(nhaHang.getId())
-                .update("luot_tim_kiem",
-                        FieldValue.increment(1));
+                .update("luot_tim_kiem", FieldValue.increment(1));
     }
 }

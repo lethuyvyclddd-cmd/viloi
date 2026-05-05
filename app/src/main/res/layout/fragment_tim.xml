@@ -74,6 +74,16 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:padding="16dp"/>
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Không tìm thấy kết quả"
+        android:textSize="14sp"
+        android:textColor="#999999"
+        android:gravity="center"
+        android:visibility="gone"
+        android:paddingBottom="8dp"/>
 
     <!-- List -->
     <androidx.recyclerview.widget.RecyclerView

@@ -2,14 +2,12 @@ package com.example.viloi.ui.DanhMuc;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.*;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.viloi.R;
 import com.example.viloi.ui.adapter.DanhMucAdapter;
 import com.example.viloi.ui.model.DanhMuc;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,11 +29,7 @@ public class DanhMucFragment extends Fragment {
     private RecyclerView rvDanhMuc;
     private DanhMucAdapter adapter;
     private List<DanhMuc> list = new ArrayList<>();
-
     private FirebaseFirestore db;
-
-    private EditText etSearch;
-    private TextView tvUserInitial;
 
     @Nullable
     @Override
@@ -44,46 +39,40 @@ public class DanhMucFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_danh_muc, container, false);
 
-        // ===== ÁNH XẠ VIEW =====
         rvDanhMuc = view.findViewById(R.id.rv_categories_dm);
-        etSearch = view.findViewById(R.id.et_search_dm);
-        tvUserInitial = view.findViewById(R.id.tv_user_initial);
 
-        // ===== CLICK THÊM MỚI =====
-        view.findViewById(R.id.txtThemMoi).setOnClickListener(v -> {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_danhMucFragment_to_themDanhMucFragment);
-        });
-
-        // ===== FIREBASE =====
         db = FirebaseFirestore.getInstance();
 
-        // ===== SETUP RECYCLER =====
-        rvDanhMuc.setLayoutManager(
-                new GridLayoutManager(getContext(), 4)
-        );
+        rvDanhMuc.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
-        adapter = new DanhMucAdapter(list, danhMuc -> {
+        adapter = new DanhMucAdapter(list, new DanhMucAdapter.OnClickListener() {
 
-            Bundle bundle = new Bundle();
-            bundle.putString("maDanhMuc", danhMuc.getId());
-            bundle.putString("tenDanhMuc", danhMuc.getTen());
+            @Override
+            public void onClick(DanhMuc dm) {
 
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.NhaHangFragment, bundle);
+                Bundle bundle = new Bundle();
+                bundle.putString("maDanhMuc", dm.getId());
+                bundle.putString("tenDanhMuc", dm.getTen());
+
+                NavHostFragment.findNavController(DanhMucFragment.this)
+                        .navigate(R.id.NhaHangFragment, bundle);
+            }
+
+            @Override
+            public void onLongClick(DanhMuc dm) {
+                showBottomSheet(dm);
+            }
         });
+
         rvDanhMuc.setAdapter(adapter);
 
-        // ===== LOAD DATA =====
         loadDanhMuc();
 
         return view;
     }
 
-    // ================= LOAD DANH MỤC =================
+    // ===== LOAD DATA =====
     private void loadDanhMuc() {
-
-        Log.d("FIREBASE_DM", "Start loading...");
 
         db.collection("danh_muc")
                 .whereEqualTo("hoat_dong", true)
@@ -93,22 +82,75 @@ public class DanhMucFragment extends Fragment {
 
                     list.clear();
 
-                    Log.d("FIREBASE_DM", "SIZE = " + snapshots.size());
-
                     for (QueryDocumentSnapshot doc : snapshots) {
-                        try {
-                            DanhMuc dm = doc.toObject(DanhMuc.class);
-                            dm.setId(doc.getId());
-                            list.add(dm);
-                        } catch (Exception e) {
-                            Log.e("FIREBASE_ERROR", "Doc lỗi: " + doc.getId(), e);
-                        }
+                        DanhMuc dm = doc.toObject(DanhMuc.class);
+                        dm.setId(doc.getId());
+                        list.add(dm);
                     }
 
                     adapter.notifyDataSetChanged();
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("FIREBASE_DM", "ERROR: " + e.getMessage());
-                });
+                .addOnFailureListener(e ->
+                        Log.e("FIREBASE_DM", e.getMessage())
+                );
+    }
+
+    // ===== BOTTOM SHEET =====
+    private void showBottomSheet(DanhMuc category) {
+
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+
+        View view = LayoutInflater.from(requireContext())
+                .inflate(R.layout.bottom_sheet_action, null);
+
+        TextView textTitle = view.findViewById(R.id.textTitle);
+        TextView textEdit = view.findViewById(R.id.textEdit);
+        TextView textDelete = view.findViewById(R.id.textDelete);
+
+        textTitle.setText(category.getTen());
+
+        textEdit.setOnClickListener(v -> {
+            dialog.dismiss();
+            showEdit(category);
+        });
+
+        textDelete.setOnClickListener(v -> {
+            dialog.dismiss();
+            showDelete(category);
+        });
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    // ===== EDIT =====
+    private void showEdit(DanhMuc dm) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("maDanhMuc", dm.getId());
+        bundle.putString("tenDanhMuc", dm.getTen());
+
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_danhMucFragment_to_SuaDanhMucFragment, bundle);
+    }
+
+    // ===== DELETE =====
+    private void showDelete(DanhMuc dm) {
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Xoá")
+                .setMessage("Xoá \"" + dm.getTen() + "\"?")
+                .setPositiveButton("Xoá", (d, w) -> {
+
+                    db.collection("danh_muc")
+                            .document(dm.getId())
+                            .delete()
+                            .addOnSuccessListener(unused -> {
+                                list.removeIf(item -> item.getId().equals(dm.getId()));
+                                adapter.notifyDataSetChanged();
+                            });
+                })
+                .setNegativeButton("Huỷ", null)
+                .show();
     }
 }

@@ -29,12 +29,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000"/>
 
-            <ImageView
-                android:id="@+id/ivEditND"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_edit_nguoidung_24px"
-                android:layout_gravity="center_vertical"/>
+
         </LinearLayout>
 
         <!-- User Info -->

@@ -2,7 +2,6 @@ package com.example.viloi.ui.home;
 
 import android.os.Bundle;
 import android.view.*;
-import android.widget.Toast;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,13 +22,10 @@ import com.example.viloi.ui.model.NhaHang;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -51,7 +47,6 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-    private int soGoiYToiDa = 5;
     private int nguongTimKiem = 3;
 
     @Nullable
@@ -59,6 +54,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -73,10 +69,11 @@ public class HomeFragment extends Fragment {
         bindViews(view);
         setupRecycler();
         setupUserInfo();
-        loadConfig();
+        loadData();
     }
 
     private void bindViews(View view) {
+
         tvLocation = view.findViewById(R.id.tv_location);
         tvUserInitial = view.findViewById(R.id.tv_user_initial);
 
@@ -102,36 +99,40 @@ public class HomeFragment extends Fragment {
 
     private void setupRecycler() {
 
+        // ===== DANH MỤC =====
         rvDanhMuc.setLayoutManager(
                 new LinearLayoutManager(getContext(),
                         LinearLayoutManager.HORIZONTAL, false));
 
         danhMucAdapter = new DanhMucAdapter(
                 danhMucList,
-                this::openDanhMuc
-        );
+                new DanhMucAdapter.OnClickListener() {
+                    @Override
+                    public void onClick(DanhMuc dm) {
+                        openDanhMuc(dm);
+                    }
+
+                    @Override
+                    public void onLongClick(DanhMuc dm) {
+                        showBottomSheet(dm);
+                    }
+                });
 
         rvDanhMuc.setAdapter(danhMucAdapter);
 
+        // ===== GỢI Ý =====
         rvGoiY.setLayoutManager(
                 new LinearLayoutManager(getContext(),
                         LinearLayoutManager.HORIZONTAL, false));
 
-        goiYAdapter = new GoiYAdapter(
-                goiYList,
-                this::openNhaHang
-        );
-
+        goiYAdapter = new GoiYAdapter(goiYList, this::openNhaHang);
         rvGoiY.setAdapter(goiYAdapter);
 
+        // ===== HOT =====
         rvHot.setLayoutManager(new LinearLayoutManager(getContext()));
         rvHot.setNestedScrollingEnabled(false);
 
-        hotAdapter = new HotAdapter(
-                hotList,
-                this::openNhaHang
-        );
-
+        hotAdapter = new HotAdapter(hotList, this::openNhaHang);
         rvHot.setAdapter(hotAdapter);
     }
 
@@ -148,39 +149,12 @@ public class HomeFragment extends Fragment {
                     if (!isAdded()) return;
 
                     if (doc.exists()) {
-                        try {
-                            NguoiDung nd = doc.toObject(NguoiDung.class);
-
-                            if (nd != null) {
-                                tvUserInitial.setText(nd.getInitial());
-                            }
-
-                        } catch (Exception e) {
-                            tvUserInitial.setText("U");
+                        NguoiDung nd = doc.toObject(NguoiDung.class);
+                        if (nd != null) {
+                            tvUserInitial.setText(nd.getInitial());
                         }
                     }
                 });
-    }
-
-    private void loadConfig() {
-
-        db.collection("cau_hinh_app")
-                .document("goi_y")
-                .get()
-                .addOnSuccessListener(doc -> {
-
-                    if (doc.exists()) {
-
-                        Long so = doc.getLong("so_goi_y_toi_da");
-                        Long nguong = doc.getLong("nguong_tim_kiem");
-
-                        if (so != null) soGoiYToiDa = so.intValue();
-                        if (nguong != null) nguongTimKiem = nguong.intValue();
-                    }
-
-                    loadData();
-                })
-                .addOnFailureListener(e -> loadData());
     }
 
     private void loadData() {
@@ -202,13 +176,9 @@ public class HomeFragment extends Fragment {
                     danhMucList.clear();
 
                     for (QueryDocumentSnapshot doc : snapshot) {
-                        try {
-                            DanhMuc dm = doc.toObject(DanhMuc.class);
-                            dm.setId(doc.getId());
-                            danhMucList.add(dm);
-
-                        } catch (Exception ignored) {
-                        }
+                        DanhMuc dm = doc.toObject(DanhMuc.class);
+                        dm.setId(doc.getId());
+                        danhMucList.add(dm);
                     }
 
                     danhMucAdapter.notifyDataSetChanged();
@@ -228,13 +198,9 @@ public class HomeFragment extends Fragment {
                     hotList.clear();
 
                     for (QueryDocumentSnapshot doc : snapshot) {
-                        try {
-                            NhaHang nh = doc.toObject(NhaHang.class);
-                            nh.setId(doc.getId());
-                            hotList.add(nh);
-
-                        } catch (Exception ignored) {
-                        }
+                        NhaHang nh = doc.toObject(NhaHang.class);
+                        nh.setId(doc.getId());
+                        hotList.add(nh);
                     }
 
                     hotAdapter.notifyDataSetChanged();
@@ -261,11 +227,8 @@ public class HomeFragment extends Fragment {
 
                 if (count != null && count >= nguongTimKiem) {
 
-                    String id = data.child("ma_nha_hang")
-                            .getValue(String.class);
-
-                    String ten = data.child("ten_nha_hang")
-                            .getValue(String.class);
+                    String id = data.child("ma_nha_hang").getValue(String.class);
+                    String ten = data.child("ten_nha_hang").getValue(String.class);
 
                     NhaHang nh = new NhaHang();
                     nh.setId(id);
@@ -281,19 +244,13 @@ public class HomeFragment extends Fragment {
 
     private void openNhaHang(NhaHang nhaHang) {
 
-        FirebaseHelper.saveSearch(
-                nhaHang.getId(),
-                nhaHang.getTen()
-        );
+        FirebaseHelper.saveSearch(nhaHang.getId(), nhaHang.getTen());
 
         Bundle bundle = new Bundle();
         bundle.putString("maNhaHang", nhaHang.getId());
 
         NavHostFragment.findNavController(this)
-                .navigate(
-                        R.id.ChiTietNhaHangFragment,
-                        bundle
-                );
+                .navigate(R.id.ChiTietNhaHangFragment, bundle);
     }
 
     private void openDanhMuc(DanhMuc danhMuc) {
@@ -303,9 +260,10 @@ public class HomeFragment extends Fragment {
         bundle.putString("tenDanhMuc", danhMuc.getTen());
 
         NavHostFragment.findNavController(this)
-                .navigate(
-                        R.id.NhaHangFragment,
-                        bundle
-                );
+                .navigate(R.id.NhaHangFragment, bundle);
+    }
+
+    private void showBottomSheet(DanhMuc dm) {
+        // nếu bạn cần mình sẽ làm tiếp UI ở đây
     }
 }

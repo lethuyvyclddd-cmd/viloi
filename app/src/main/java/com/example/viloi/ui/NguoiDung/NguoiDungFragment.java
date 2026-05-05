@@ -1,5 +1,6 @@
 package com.example.viloi.ui.NguoiDung;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.viloi.LoginActivity;
 import com.example.viloi.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,8 +84,8 @@ public class NguoiDungFragment extends Fragment {
 
     // ─────────────────────────────────────────────
     // LOAD THÔNG TIN NGƯỜI DÙNG
-    // collection: nguoi_dung / {userId}
-    // fields: ten_hien_thi, email, vai_tro, tong_tim_kiem
+//     collection: nguoi_dung / {userId}
+//     fields: ten_hien_thi, email, vai_tro, tong_tim_kiem
     // ─────────────────────────────────────────────
     private void loadUserInfo() {
         db.collection("nguoi_dung")
@@ -123,40 +125,47 @@ public class NguoiDungFragment extends Fragment {
     // LOAD THỐNG KÊ (3 con số)
     // ─────────────────────────────────────────────
     private void loadStats() {
-        // 1. Đếm Yêu thích: sub-collection nguoi_dung/{userId}/yeu_thich
+
+        // ===== 1. YÊU THÍCH =====
         db.collection("nguoi_dung")
                 .document(userId)
                 .collection("yeu_thich")
                 .get()
-                .addOnSuccessListener((QuerySnapshot snap) -> {
+                .addOnSuccessListener(snap -> {
                     if (!isAdded()) return;
-                    tvFavoriteCount.setText(String.valueOf(snap.size()));
 
-                    // Cập nhật subtitle menu "X quán đã lưu"
-                    updateFavoriteSubtitle(snap.size());
+                    int count = snap.size();
+                    tvFavoriteCount.setText(String.valueOf(count));
+                    updateFavoriteSubtitle(count);
                 });
 
-        // 2. Đếm Lịch sử: sub-collection nguoi_dung/{userId}/lich_su_tim_kiem
+        // ===== 2. LỊCH SỬ TÌM KIẾM =====
         db.collection("nguoi_dung")
                 .document(userId)
                 .collection("lich_su_tim_kiem")
                 .get()
-                .addOnSuccessListener((QuerySnapshot snap) -> {
+                .addOnSuccessListener(snap -> {
                     if (!isAdded()) return;
-                    // tvVisitCount đã dùng tong_tim_kiem từ loadUserInfo,
-                    // nhưng nếu muốn đếm chính xác từ sub-collection:
-                    // tvVisitCount.setText(String.valueOf(snap.size()));
-                    updateHistorySubtitle(snap.size());
+
+                    int count = snap.size();
+
+                    // ⭐ FIX QUAN TRỌNG: set luôn số chính
+                    tvVisitCount.setText(String.valueOf(count));
+
+                    updateHistorySubtitle(count);
                 });
 
-        // 3. Đếm Đánh giá: collection danh_gia where ma_nguoi_dung == userId
+        // ===== 3. ĐÁNH GIÁ =====
         db.collection("danh_gia")
                 .whereEqualTo("ma_nguoi_dung", userId)
                 .get()
-                .addOnSuccessListener((QuerySnapshot snap) -> {
+                .addOnSuccessListener(snap -> {
                     if (!isAdded()) return;
-                    tvReviewCount.setText(String.valueOf(snap.size()));
-                    updateReviewSubtitle(snap.size());
+
+                    int count = snap.size();
+
+                    tvReviewCount.setText(String.valueOf(count));
+                    updateReviewSubtitle(count);
                 });
     }
 
@@ -212,13 +221,7 @@ public class NguoiDungFragment extends Fragment {
     // CLICK LISTENERS
     // ─────────────────────────────────────────────
     private void setupClickListeners() {
-        // Nút sửa hồ sơ (icon pencil trên header)
-        if (getView() != null) {
-            getView().findViewById(R.id.ivEditND)
-                    .setOnClickListener(v -> navigateToEditProfile());
-        }
 
-        // Quán yêu thích
 
         // Lịch sử tìm kiếm
         layoutHistory.setOnClickListener(v -> navigateToHistory());
@@ -262,8 +265,8 @@ public class NguoiDungFragment extends Fragment {
     }
 
     private void navigateToLogin() {
-        // startActivity(new Intent(getActivity(), LoginActivity.class));
-        // getActivity().finish();
+         startActivity(new Intent(getActivity(), LoginActivity.class));
+         getActivity().finish();
     }
 
     // ─────────────────────────────────────────────
