@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -87,6 +88,14 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onClick(nh);
         });
+
+        holder.btnSua.setOnClickListener(v -> {
+
+        });
+
+        holder.btnXoa.setOnClickListener(v -> {
+
+        });
     }
 
     @Override
@@ -103,6 +112,8 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
         TextView tvTen, tvDiaChi, tvSao, tvGia, tvYeuThich;
         CardView cardView;
 
+        Button btnSua, btnXoa;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -113,6 +124,8 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
             tvSao = itemView.findViewById(R.id.tvSao);
             tvGia = itemView.findViewById(R.id.tvGia);
             tvYeuThich = itemView.findViewById(R.id.tvYeuThich);
+            btnSua = itemView.findViewById(R.id.btnSua);
+            btnXoa = itemView.findViewById(R.id.btnXoa);
         }
     }
 
