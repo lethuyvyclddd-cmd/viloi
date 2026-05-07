@@ -129,12 +129,21 @@ public class NguoiDungFragment extends Fragment {
         // ===== 1. YÊU THÍCH =====
         db.collection("nguoi_dung")
                 .document(userId)
-                .collection("yeu_thich")
                 .get()
-                .addOnSuccessListener(snap -> {
-                    if (!isAdded()) return;
+                .addOnSuccessListener(doc -> {
+                    if (!isAdded() || doc == null || !doc.exists()) return;
 
-                    int count = snap.size();
+                    Object yeuThichObj = doc.get("yeu_thich");
+
+                    int count = 0;
+
+                    if (yeuThichObj instanceof java.util.Map) {
+                        java.util.Map<?, ?> map =
+                                (java.util.Map<?, ?>) yeuThichObj;
+
+                        count = map.size();
+                    }
+
                     tvFavoriteCount.setText(String.valueOf(count));
                     updateFavoriteSubtitle(count);
                 });
