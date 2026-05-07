@@ -42,7 +42,7 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_nha_hang, parent, false);
+                .inflate(R.layout.item_nha_hang_sua_xoa, parent, false);
 
         return new ViewHolder(view);
     }
