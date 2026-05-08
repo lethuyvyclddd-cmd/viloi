@@ -1,5 +1,7 @@
 package com.example.viloi.ui.NhaHang;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
@@ -70,6 +72,26 @@ public class NhaHangFragment extends Fragment {
 
         ivBack.setOnClickListener(v ->
                 NavHostFragment.findNavController(this).navigateUp());
+
+        adapter.setOnSuaListener((nhaHang, position) -> {
+            // Ví dụ: mở màn hình chỉnh sửa
+            Intent intent = new Intent(getContext(), SuaNhaHangFragment.class);
+            intent.putExtra("id", nhaHang.getId());
+            startActivity(intent);
+        });
+
+        adapter.setOnXoaListener((nhaHang, position) -> {
+            // Hiện dialog xác nhận trước khi xóa
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có chắc muốn xóa \"" + nhaHang.getTen() + "\" không?")
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        // Gọi xóa trên server/db rồi cập nhật list
+                        adapter.removeItem(position);
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
+        });
 
         loadData();
 

@@ -25,8 +25,21 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
         void onClick(NhaHang nhaHang);
     }
 
+    // Thêm 2 interface mới
+    public interface OnSuaListener {
+        void onSua(NhaHang nhaHang, int position);
+    }
+
+    public interface OnXoaListener {
+        void onXoa(NhaHang nhaHang, int position);
+    }
+
     private final List<NhaHang> items;
     private final OnClickListener listener;
+
+    private OnSuaListener onSuaListener;
+
+    private OnXoaListener onXoaListener;
 
     public NhaHangAdapter(List<NhaHang> items) {
         this.items = items;
@@ -36,6 +49,15 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
     public NhaHangAdapter(List<NhaHang> items, OnClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    // Setter cho 2 listener mới
+    public void setOnSuaListener(OnSuaListener onSuaListener) {
+        this.onSuaListener = onSuaListener;
+    }
+
+    public void setOnXoaListener(OnXoaListener onXoaListener) {
+        this.onXoaListener = onXoaListener;
     }
 
     @NonNull
@@ -90,12 +112,22 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
         });
 
         holder.btnSua.setOnClickListener(v -> {
+            if(onSuaListener != null)
+                onSuaListener.onSua(nh, position);
 
         });
 
         holder.btnXoa.setOnClickListener(v -> {
+            if(onXoaListener != null)
+                onXoaListener.onXoa(nh, position);
 
         });
+    }
+
+    public void removeItem(int position) {
+        items.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, items.size());
     }
 
     @Override
