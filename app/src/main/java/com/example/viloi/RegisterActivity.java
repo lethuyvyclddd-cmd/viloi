@@ -11,9 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.*;
-import com.google.firebase.database.*;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.time.Instant;
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
     private MaterialButton btnRegister;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference userRef;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnSignUp);
 
         mAuth = FirebaseAuth.getInstance();
-        userRef = FirebaseDatabase.getInstance().getReference("nguoi_dung");
+        db = FirebaseFirestore.getInstance();
 
         btnRegister.setOnClickListener(v -> registerUser());
     }
@@ -59,7 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(authResult -> {
 
                     String uid = mAuth.getCurrentUser().getUid();
-                    String time = Instant.now().toString();
+                    com.google.firebase.Timestamp time =
+                            com.google.firebase.Timestamp.now();
 
                     HashMap<String, Object> user = new HashMap<>();
                     user.put("email", email);
@@ -73,11 +73,20 @@ public class RegisterActivity extends AppCompatActivity {
                     user.put("lich_su_tim_kiem", new HashMap<>());
                     user.put("yeu_thich", new HashMap<>());
 
-                    userRef.child(uid).setValue(user)
+                    db.collection("nguoi_dung")
+                            .document(uid)
+                            .set(user)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Đăng ký OK", Toast.LENGTH_SHORT).show();
+
                                 startActivity(new Intent(this, MainActivity.class));
                                 finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                btnRegister.setEnabled(true);
+                                Toast.makeText(this,
+                                        "Lỗi lưu dữ liệu: " + e.getMessage(),
+                                        Toast.LENGTH_LONG).show();
                             });
 
                 })

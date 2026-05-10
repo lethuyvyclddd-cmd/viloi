@@ -3,49 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#FFF5F0"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="80dp">
+        android:paddingBottom="90dp">
 
-        <!-- ======= HEADER ======= -->
+        <!-- ===== HEADER ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
             android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="12dp"
-            android:gravity="center_vertical">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="18dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_header_orange">
 
-            <!-- Location Block -->
+            <!-- Title -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khám phá"
+                    android:textColor="#FFE0D1"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DANH MỤC"
-                    android:textColor="#1A1A1A"
-                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- User Avatar Circle -->
+            <!-- Avatar -->
             <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_avatar_circle">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_avatar_orange">
 
                 <TextView
                     android:id="@+id/tv_user_initial"
@@ -53,97 +59,106 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="A"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
+                    android:textColor="#FF6B35"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
             </FrameLayout>
+
         </LinearLayout>
 
-        <!-- ======= SEARCH BAR ======= -->
+        <!-- ===== SEARCH ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="12dp">
+            android:layout_marginTop="-12dp"
+            android:paddingHorizontal="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_search_bar"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_search_new"
+                android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="12dp">
+                android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_search"
-                    app:tint="#999999" />
+                    app:tint="#FF6B35" />
 
                 <EditText
                     android:id="@+id/et_search_dm"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="Tìm quán ăn, địa chỉ..."
-                    android:textColorHint="#AAAAAA"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="8dp"
-                    android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:singleLine="true"/>
+                    android:inputType="text"
+                    android:paddingVertical="10dp"
+                    android:singleLine="true"
+                    android:textColor="#222222"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="15sp" />
+
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ======= CATEGORIES SECTION ======= -->
+        <!-- ===== SECTION ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_section_white"
             android:orientation="vertical"
-            android:background="#FFFFFF"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:layout_marginTop="8dp">
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp">
 
-            <!-- Section Header -->
+            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:orientation="horizontal"
+                android:paddingHorizontal="18dp"
+                android:layout_marginBottom="14dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Tất cả danh mục"
-                    android:textColor="#1A1A1A"
-                    android:textSize="17sp"
+                    android:textColor="#222222"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtThemMoi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_add_button"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="7dp"
                     android:text="+ Thêm mới"
-                    android:textColor="#FF6B35"
-                    android:textSize="13sp" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
+            <!-- Recycler -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_categories_dm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
                 android:clipToPadding="false"
-                android:orientation="horizontal" />
+                android:paddingHorizontal="10dp" />
+
         </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>

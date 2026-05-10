@@ -48,7 +48,6 @@ public class GoiYAdapter extends RecyclerView.Adapter<GoiYAdapter.ViewHolder> {
         h.tvRating.setText(nh.getRatingDisplay());
 
         h.tvLuotTimKiem.setText(nh.getLuotTimKiemDisplay());
-        // Badge: "Đã tìm 5 lần"
         h.tvBadge.setText(nh.getLuotTimKiemDisplay());
 
         String path = nh.getFirstImageUrl();

@@ -86,7 +86,7 @@ public class LichSuTimKiemFragment extends Fragment {
         db.collection("nguoi_dung")
                 .document(userId)
                 .collection("lich_su_tim_kiem")
-                .orderBy("thoi_gian", Query.Direction.DESCENDING)
+                .orderBy("lan_tim_cuoi", Query.Direction.DESCENDING)
                 .addSnapshotListener((querySnapshot, error) -> {
 
                     if (error != null || querySnapshot == null) return;
@@ -101,10 +101,10 @@ public class LichSuTimKiemFragment extends Fragment {
                         item.setId(doc.getId());
                         item.setMaNhaHang(doc.getString("ma_nha_hang"));
                         item.setTenNhaHang(doc.getString("ten_nha_hang"));
-                        item.setThoiGian(doc.getTimestamp("thoi_gian"));
+                        item.setThoiGian(doc.getTimestamp("lan_tim_cuoi"));
 
                         // 🔍 DEBUG
-                        Log.d("TIME_DEBUG", "RAW: " + doc.get("thoi_gian"));
+                        Log.d("TIME_DEBUG", "RAW: " + doc.get("lan_tim_cuoi"));
                         Log.d("TIME_DEBUG", "SET: " + item.getThoiGian());
 
                         danhSach.add(item);
@@ -124,9 +124,17 @@ public class LichSuTimKiemFragment extends Fragment {
                 .document(item.getId())
                 .delete()
                 .addOnSuccessListener(unused -> {
-                    danhSach.remove(position);
-                    adapter.notifyItemRemoved(position);
-                    capNhatTrangThai();
+
+                    // Kiểm tra position hợp lệ
+                    if (position >= 0 && position < danhSach.size()) {
+
+                        danhSach.remove(position);
+
+                        // Cách ổn định hơn
+                        adapter.notifyDataSetChanged();
+
+                        capNhatTrangThai();
+                    }
                 });
     }
 

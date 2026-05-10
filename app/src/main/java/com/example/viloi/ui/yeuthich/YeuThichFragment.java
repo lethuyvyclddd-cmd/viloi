@@ -72,50 +72,62 @@ public class YeuThichFragment extends Fragment {
     // nguoi_dung/{userId}/yeu_thich/{maNhaHang}: { ma_nha_hang, ten_nha_hang, them_luc }
     @SuppressWarnings("unchecked")
     private void loadYeuThich() {
-        db.collection("nguoi_dung").document(userId)
+
+        db.collection("nguoi_dung")
+                .document(userId)
+                .collection("yeu_thich")
                 .get()
-                .addOnSuccessListener(userDoc -> {
-                    if (!isAdded() || userDoc == null) return;
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    if (!isAdded()) return;
+
                     danhSach.clear();
 
-                    // Đọc nested map
-                    Object raw = userDoc.get("yeu_thich");
-                    if (!(raw instanceof Map)) {
+                    if (queryDocumentSnapshots.isEmpty()) {
                         showEmpty(true);
                         return;
                     }
 
-                    Map<String, Object> mapYT = (Map<String, Object>) raw;
-                    if (mapYT.isEmpty()) {
-                        showEmpty(true);
-                        return;
-                    }
+                    int total = queryDocumentSnapshots.size();
+                    int[] loaded = {0};
 
-                    List<String> ids = new ArrayList<>(mapYT.keySet());
-                    int   total    = ids.size();
-                    int[] loaded   = {0};
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
 
-                    for (String maNH : ids) {
-                        db.collection("nha_hang").document(maNH)
+                        String maNH = doc.getString("ma_nha_hang");
+
+                        if (maNH == null || maNH.isEmpty()) {
+                            loaded[0]++;
+                            continue;
+                        }
+
+                        db.collection("nha_hang")
+                                .document(maNH)
                                 .get()
                                 .addOnSuccessListener(nhDoc -> {
+
                                     if (!isAdded()) return;
+
                                     if (nhDoc.exists()) {
-                                        NhaHang nh = nhDoc.toObject(NhaHang.class);
-                                        if (nh != null) {
-                                            nh.setId(nhDoc.getId());
-                                            danhSach.add(nh);
+
+                                        NhaHang nhaHang = nhDoc.toObject(NhaHang.class);
+
+                                        if (nhaHang != null) {
+                                            nhaHang.setId(nhDoc.getId());
+                                            danhSach.add(nhaHang);
                                         }
                                     }
+
                                     loaded[0]++;
+
                                     if (loaded[0] == total) {
                                         adapter.notifyDataSetChanged();
                                         showEmpty(danhSach.isEmpty());
                                     }
                                 })
                                 .addOnFailureListener(e -> {
-                                    // Vẫn tăng counter dù lỗi để không bị treo
+
                                     loaded[0]++;
+
                                     if (loaded[0] == total) {
                                         adapter.notifyDataSetChanged();
                                         showEmpty(danhSach.isEmpty());
@@ -124,7 +136,8 @@ public class YeuThichFragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Lỗi tải danh sách: " + e.getMessage(),
+                        Toast.makeText(getContext(),
+                                "Lỗi tải yêu thích: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show());
     }
 
@@ -138,8 +151,11 @@ public class YeuThichFragment extends Fragment {
 
     private void doBoYeuThich(NhaHang nhaHang, int position) {
         // Xoá key trong nested map
-        db.collection("nguoi_dung").document(userId)
-                .update("yeu_thich." + nhaHang.getId(), FieldValue.delete())
+        db.collection("nguoi_dung")
+                .document(userId)
+                .collection("yeu_thich")
+                .document(nhaHang.getId())
+                .delete()
                 .addOnSuccessListener(unused -> {
                     if (!isAdded()) return;
                     // Giảm counter ở nha_hang

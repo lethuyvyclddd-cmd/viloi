@@ -91,7 +91,7 @@
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
                     android:text="Hot"
-                    android:textColor="#FF4444"
+                    android:textColor="#FBFBFB"
                     android:textSize="10sp"
                     android:textStyle="bold" />
 

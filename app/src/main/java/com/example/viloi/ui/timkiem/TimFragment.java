@@ -257,16 +257,10 @@ public class TimFragment extends Fragment {
 
         if (userId == null || nhaHang == null) return;
 
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("ma_nha_hang", nhaHang.getId());
-        data.put("ten_nha_hang", nhaHang.getTen());
-        data.put("thoi_gian", new com.google.firebase.Timestamp(new java.util.Date()));
-
         // FIX: dùng add thay vì document(id)
         db.collection("nguoi_dung")
                 .document(userId)
-                .collection("lich_su_tim_kiem")
-                .add(data);
+                .collection("lich_su_tim_kiem");
 
         db.collection("nha_hang")
                 .document(nhaHang.getId())

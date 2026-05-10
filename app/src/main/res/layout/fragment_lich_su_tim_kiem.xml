@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="#FFF6F1">
 
+    <!-- HEADER -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:padding="16dp"
+        android:background="@drawable/bg_history_header"
+        android:paddingHorizontal="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
         android:gravity="center_vertical"
         android:elevation="4dp">
 
@@ -18,18 +21,19 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_muiten"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="14dp"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Lịch sử tìm kiếm"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/btnXoaTatCa"
@@ -37,39 +41,55 @@
             android:layout_height="wrap_content"
             android:text="Xoá tất cả"
             android:textSize="13sp"
-            android:textColor="#F44336"
+            android:textStyle="bold"
+            android:textColor="#FF6B35"
+            android:background="@drawable/bg_delete_button"
             android:clickable="true"
             android:focusable="true"
-            android:padding="4dp"/>
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"/>
     </LinearLayout>
 
+    <!-- EMPTY -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:padding="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🔍"
-            android:textSize="48sp"
-            android:layout_marginBottom="12dp"/>
+            android:textSize="64sp"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chưa có lịch sử tìm kiếm"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#444444"
+            android:layout_marginBottom="6dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hãy tìm kiếm quán ăn yêu thích của bạn"
+            android:textSize="13sp"
             android:textColor="#999999"/>
     </LinearLayout>
 
+    <!-- LIST -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLichSu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:padding="12dp"/>
 
 </LinearLayout>

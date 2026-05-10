@@ -74,10 +74,15 @@ public class NhaHangFragment extends Fragment {
                 NavHostFragment.findNavController(this).navigateUp());
 
         adapter.setOnSuaListener((nhaHang, position) -> {
-            // Ví dụ: mở màn hình chỉnh sửa
-            Intent intent = new Intent(getContext(), SuaNhaHangFragment.class);
-            intent.putExtra("id", nhaHang.getId());
-            startActivity(intent);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(
+                    SuaNhaHangFragment.ARG_MA_NHA_HANG,
+                    nhaHang.getId()
+            );
+
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.SuaNhaHangFragment, bundle);
         });
 
         adapter.setOnXoaListener((nhaHang, position) -> {
@@ -86,8 +91,22 @@ public class NhaHangFragment extends Fragment {
                     .setTitle("Xác nhận xóa")
                     .setMessage("Bạn có chắc muốn xóa \"" + nhaHang.getTen() + "\" không?")
                     .setPositiveButton("Xóa", (dialog, which) -> {
-                        // Gọi xóa trên server/db rồi cập nhật list
-                        adapter.removeItem(position);
+                        // ✅ Xóa trên Firestore trước
+                        db.collection("nha_hang")
+                                .document(nhaHang.getId())
+                                .delete()
+                                .addOnSuccessListener(unused -> {
+                                    // Xóa Firestore thành công → mới xóa khỏi UI
+                                    adapter.removeItem(position);
+                                    Toast.makeText(getContext(),
+                                            "Đã xóa \"" + nhaHang.getTen() + "\"",
+                                            Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(getContext(),
+                                                "Xóa thất bại: " + e.getMessage(),
+                                                Toast.LENGTH_SHORT).show()
+                                );
                     })
                     .setNegativeButton("Hủy", null)
                     .show();

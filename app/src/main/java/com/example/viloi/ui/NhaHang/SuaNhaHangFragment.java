@@ -13,6 +13,7 @@ import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.viloi.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
@@ -49,7 +50,13 @@ public class SuaNhaHangFragment extends Fragment {
                         if (result.getResultCode() == Activity.RESULT_OK
                                 && result.getData() != null) {
                             selectedImageUri = result.getData().getData();
-                            ivAnhHienTai.setImageURI(selectedImageUri);
+                            // ✅ Hiển thị ảnh mới chọn ngay lập tức
+                            Glide.with(this)
+                                    .load(selectedImageUri)
+                                    .placeholder(R.drawable.ic_category_default)
+                                    .error(R.drawable.ic_category_default)
+                                    .centerCrop()
+                                    .into(ivAnhHienTai);
                         }
                     });
 
@@ -80,7 +87,6 @@ public class SuaNhaHangFragment extends Fragment {
         btnSua.setOnClickListener(v -> validate());
 
         loadDanhMuc();
-        if (maNhaHang != null) loadNhaHang();
     }
 
     private void bindViews(View v) {
@@ -146,10 +152,16 @@ public class SuaNhaHangFragment extends Fragment {
                     int idx = dsMaDM.indexOf(maDM);
                     if (idx >= 0) spinnerCategory.setSelection(idx);
 
-                    // Ảnh hiện tại
                     List<String> anh = (List<String>) doc.get("hinh_anh");
-                    if (anh != null) anhHienTai = anh;
-                    // Load ảnh: Glide.with(this).load(anhHienTai.get(0)).into(ivAnhHienTai);
+                    if (anh != null && !anh.isEmpty()) {
+                        anhHienTai = anh;
+                        Glide.with(this)
+                                .load(anh.get(0))
+                                .placeholder(R.drawable.ic_category_default)
+                                .error(R.drawable.ic_category_default)
+                                .centerCrop()
+                                .into(ivAnhHienTai);
+                    }
                 });
     }
 
@@ -176,17 +188,63 @@ public class SuaNhaHangFragment extends Fragment {
     }
 
     private void uploadAnhRoiLuu() {
-        String fileName = "nha_hang/" + maNhaHang + "_" + System.currentTimeMillis() + ".jpg";
-        StorageReference ref = storage.getReference().child(fileName);
-        ref.putFile(selectedImageUri)
-                .addOnSuccessListener(t -> ref.getDownloadUrl()
-                        .addOnSuccessListener(uri -> {
-                            List<String> anh = new ArrayList<>();
-                            anh.add(uri.toString());
-                            luuFirestore(anh);
-                        }))
-                .addOnFailureListener(e -> luuFirestore(anhHienTai));
+//        if (selectedImageUri == null) {
+//            luuFirestore(anhHienTai);
+//            return;
+//        }
+//
+//        // ✅ Đọc bytes từ URI local trước, rồi mới upload
+//        try {
+//            java.io.InputStream inputStream = requireContext()
+//                    .getContentResolver()
+//                    .openInputStream(selectedImageUri);
+//
+//            if (inputStream == null) {
+//                Toast.makeText(getContext(), "Không đọc được ảnh", Toast.LENGTH_SHORT).show();
+//                resetButton();
+//                return;
+//            }
+//
+//            byte[] bytes = readBytes(inputStream);
+//            inputStream.close();
+//
+//            String fileName = "nha_hang/" + maNhaHang + "_" + System.currentTimeMillis() + ".jpg";
+//            StorageReference ref = storage.getReference().child(fileName);
+//
+//            ref.putBytes(bytes)
+//                    .addOnSuccessListener(t -> ref.getDownloadUrl()
+//                            .addOnSuccessListener(uri -> luuFirestore(
+//                                    Collections.singletonList(uri.toString())))
+//                            .addOnFailureListener(e -> {
+//                                resetButton();
+//                                Toast.makeText(getContext(),
+//                                        "Lấy URL ảnh thất bại: " + e.getMessage(),
+//                                        Toast.LENGTH_SHORT).show();
+//                            }))
+//                    .addOnFailureListener(e -> {
+//                        resetButton();
+//                        Toast.makeText(getContext(),
+//                                "Upload ảnh thất bại: " + e.getMessage(),
+//                                Toast.LENGTH_SHORT).show();
+//                    });
+//
+//        } catch (Exception e) {
+//            resetButton();
+//            Toast.makeText(getContext(),
+//                    "Lỗi đọc ảnh: " + e.getMessage(),
+//                    Toast.LENGTH_SHORT).show();
+//        }
     }
+    private byte[] readBytes(java.io.InputStream inputStream) throws java.io.IOException {
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+        byte[] temp = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(temp)) != -1) {
+            buffer.write(temp, 0, bytesRead);
+        }
+        return buffer.toByteArray();
+    }
+
 
     private void luuFirestore(List<String> anhList) {
         int    idx    = spinnerCategory.getSelectedItemPosition();
@@ -228,6 +286,11 @@ public class SuaNhaHangFragment extends Fragment {
                     Toast.makeText(getContext(), "Lỗi: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void resetButton() {
+        btnSua.setEnabled(true);
+        btnSua.setText("Sửa");
     }
 
     private void setText(TextInputEditText et, String val) {

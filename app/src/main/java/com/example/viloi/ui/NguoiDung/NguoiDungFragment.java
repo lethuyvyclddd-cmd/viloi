@@ -19,6 +19,7 @@ import com.example.viloi.LoginActivity;
 import com.example.viloi.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -115,8 +116,6 @@ public class NguoiDungFragment extends Fragment {
                         tvUserStatus.setText("Người dùng");
                     }
 
-                    // Số lần đã tìm (stats giữa)
-                    if (tongTK != null) tvVisitCount.setText(String.valueOf(tongTK));
                 })
                 .addOnFailureListener(e -> showError("Không tải được thông tin người dùng"));
     }
@@ -129,20 +128,13 @@ public class NguoiDungFragment extends Fragment {
         // ===== 1. YÊU THÍCH =====
         db.collection("nguoi_dung")
                 .document(userId)
+                .collection("yeu_thich")
                 .get()
-                .addOnSuccessListener(doc -> {
-                    if (!isAdded() || doc == null || !doc.exists()) return;
+                .addOnSuccessListener(snap -> {
 
-                    Object yeuThichObj = doc.get("yeu_thich");
+                    if (!isAdded()) return;
 
-                    int count = 0;
-
-                    if (yeuThichObj instanceof java.util.Map) {
-                        java.util.Map<?, ?> map =
-                                (java.util.Map<?, ?>) yeuThichObj;
-
-                        count = map.size();
-                    }
+                    int count = snap.size();
 
                     tvFavoriteCount.setText(String.valueOf(count));
                     updateFavoriteSubtitle(count);
@@ -154,16 +146,27 @@ public class NguoiDungFragment extends Fragment {
                 .collection("lich_su_tim_kiem")
                 .get()
                 .addOnSuccessListener(snap -> {
+
                     if (!isAdded()) return;
 
-                    int count = snap.size();
+                    int tongSoLanTim = 0;
 
-                    // ⭐ FIX QUAN TRỌNG: set luôn số chính
-                    tvVisitCount.setText(String.valueOf(count));
+                    for (DocumentSnapshot doc : snap.getDocuments()) {
 
-                    updateHistorySubtitle(count);
+                        Long soLanTim =
+                                doc.getLong("so_lan_tim");
+
+                        if (soLanTim != null) {
+                            tongSoLanTim += soLanTim.intValue();
+                        }
+                    }
+
+                    tvVisitCount.setText(
+                            String.valueOf(tongSoLanTim)
+                    );
+
+                    updateHistorySubtitle(tongSoLanTim);
                 });
-
         // ===== 3. ĐÁNH GIÁ =====
         db.collection("danh_gia")
                 .whereEqualTo("ma_nguoi_dung", userId)
