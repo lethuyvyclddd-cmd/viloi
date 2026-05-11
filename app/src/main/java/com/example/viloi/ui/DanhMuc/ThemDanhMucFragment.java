@@ -63,6 +63,8 @@ public class ThemDanhMucFragment extends Fragment {
         btnThemDanhMuc.setOnClickListener(v -> validateAndSave());
     }
 
+
+    // kiểm tra dữ liệu trước khi luu
     private void validateAndSave() {
         if (isLoading) return;
 

@@ -85,9 +85,13 @@ public class ChiTietNhaHangFragment extends Fragment {
         setupReviewRecyclerView();
         loadNhaHang();
         loadDanhGia(true);
+
+        // kiểm tra có yêu thích nhà hàng đó không
         kiemTraYeuThich();
 
         btnBack.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
+
+        // thêm / bỏ yêu thích
         btnYeuThich.setOnClickListener(v -> toggleYeuThich());
         btnSubmitReview.setOnClickListener(v -> guiDanhGia());
         tvSortReview.setOnClickListener(v -> {
@@ -143,8 +147,12 @@ public class ChiTietNhaHangFragment extends Fragment {
                     NhaHang nh = doc.toObject(NhaHang.class);
                     if (nh == null) return;
                     nh.setId(doc.getId());
+
+                    // hiển thị thông tin nhà hàng
                     hienThiThongTin(nh);
                     doc.getReference().update("luot_xem", FieldValue.increment(1));
+
+                    // ghi lịch sử tìm kiếm
                     if (userId != null) ghiLichSuTimKiem(nh);
                 })
                 .addOnFailureListener(e ->
@@ -282,7 +290,7 @@ public class ChiTietNhaHangFragment extends Fragment {
             favRef.set(entry).addOnSuccessListener(unused -> {
                 if (!isAdded()) return;
                 daYeuThich = true;
-                capNhatIconYeuThich();
+                capNhatIconYeuThich(); // đổi màu icon yêu thích
                 nhRef.update("luot_yeu_thich", FieldValue.increment(1));
                 int cur = Integer.parseInt(tvLuotYeuThich.getText().toString());
                 tvLuotYeuThich.setText(String.valueOf(cur + 1));

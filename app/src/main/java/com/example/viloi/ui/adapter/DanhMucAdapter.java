@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.ViewHolder> {
 
-    // ===== INTERFACE FIX =====
+    // ===== nhấn vào thì mở nhà hàng, còn kia nhấn giữ hiển thị sửa/xóa =====
     public interface OnClickListener {
         void onClick(DanhMuc danhMuc);
         void onLongClick(DanhMuc danhMuc);

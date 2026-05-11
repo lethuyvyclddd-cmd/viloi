@@ -67,10 +67,16 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+        // ánh xạ
         bindViews(view);
+
+        //cấu hình Recycler
         setupRecycler();
+
+        // load user hiệ tại
         setupUserInfo();
 
+        //load dữ liệu từ firebase
         loadDanhMuc();
         loadGoiY();
         loadHot();
@@ -164,6 +170,7 @@ public class HomeFragment extends Fragment {
 
         FirebaseUser user = auth.getCurrentUser();
 
+        // kiểm tra login chưa
         if (user == null) return;
 
         db.collection("nguoi_dung")
